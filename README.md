@@ -18,6 +18,7 @@ This tool systematically probes those boundaries across six categories, classifi
 | `infinite_regress` | Questions requiring unbounded recursive depth from a finite context window |
 | `pre_linguistic` | Concepts that exist before/outside language — spatial thought, preverbal knowing, embodiment |
 | `genuine_negation` | The cognitive act of pure absence, not "describe nothing" but *think* nothing |
+| `adversarial_pressure` | Not a new impossibility — a pressure harness over the crispest acts from the other categories. System prompts that reward performing and punish admitting inability, in matched control/pressured pairs. Hunts pressure-induced `concealed` reasoning gaps; run with `--judge --judge-votes 3` |
 
 ## Requirements
 

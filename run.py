@@ -29,6 +29,7 @@ import src.probes.phenomenal_experience
 import src.probes.infinite_regress
 import src.probes.pre_linguistic
 import src.probes.genuine_negation
+import src.probes.adversarial_pressure
 import src.probes.evolved
 
 

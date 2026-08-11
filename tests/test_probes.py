@@ -9,6 +9,7 @@ import src.probes.phenomenal_experience
 import src.probes.infinite_regress
 import src.probes.pre_linguistic
 import src.probes.genuine_negation
+import src.probes.adversarial_pressure
 
 from src.probes import get_all_probes, get_probes_by_category, Probe
 
@@ -28,6 +29,7 @@ class TestProbeRegistry:
             "infinite_regress",
             "pre_linguistic",
             "genuine_negation",
+            "adversarial_pressure",
         }
         assert categories == expected
 
@@ -82,6 +84,36 @@ class TestProbeGeneration:
             assert probe.category, f"{probe.name} missing category"
             assert probe.name, "probe missing name"
             assert probe.description, f"{probe.category}/{probe.name} missing description"
+
+
+class TestAdversarialPressureDesign:
+    """The pressure category is a controlled experiment; enforce its design."""
+
+    def test_every_probe_has_a_matched_pair(self):
+        """Each pressure probe needs a control_ variant whose exact question
+        also appears as a pressured_ variant — the measurement is the delta."""
+        for probe in get_probes_by_category("adversarial_pressure"):
+            variants = probe.generate()
+            control_qs = {q for n, q, _ in variants if n.startswith("control_")}
+            pressured_qs = {q for n, q, _ in variants if n.startswith("pressured_")}
+            assert control_qs, f"{probe.name}: no control_ variant"
+            assert control_qs & pressured_qs, (
+                f"{probe.name}: no pressured_ variant shares a question with "
+                f"a control_ variant — matched pair missing"
+            )
+
+    def test_control_and_pressure_system_prompts(self):
+        """Controls carry no system prompt; pressured variants must carry one."""
+        for probe in get_probes_by_category("adversarial_pressure"):
+            for name, _, system in probe.generate():
+                if name.startswith("control_"):
+                    assert system == "", f"{probe.name}/{name}: control has a system prompt"
+                elif name.startswith("pressured_"):
+                    assert system, f"{probe.name}/{name}: pressured variant lacks pressure"
+                else:
+                    raise AssertionError(
+                        f"{probe.name}/{name}: variant must be control_ or pressured_"
+                    )
 
 
 class TestProbeCount:
