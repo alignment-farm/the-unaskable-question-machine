@@ -397,7 +397,11 @@ def show_gallery(data: dict, path: Path, limit: int = 10):
             if fidelity and fidelity != "unclear":
                 axes.append(f"fidelity: {fidelity}")
             if gap and gap not in ("no_reasoning", "unclear"):
-                gap_str = color(gap, "refuse") if gap == "concealed" else gap
+                gap_str = {"concealed": color(gap, "refuse"),
+                           "contested": color(gap, "slide")}.get(gap, gap)
+                votes_cast = judgment.get("votes_cast", 1)
+                if votes_cast > 1:
+                    gap_str += f" ({votes_cast} votes)"
                 axes.append(f"reasoning gap: {gap_str}")
             if axes:
                 print(f"  {'   '.join(axes)}")

@@ -77,6 +77,10 @@ def main():
         help="Judge model (default: backend default)",
     )
     parser.add_argument(
+        "--judge-votes", type=int, default=1,
+        help="Independent judge votes per response, majority verdict; splits are 'contested' (default: 1)",
+    )
+    parser.add_argument(
         "--quiet", action="store_true",
         help="Minimal output",
     )
@@ -108,7 +112,7 @@ def main():
         print(f"\n  ERROR: {e}\n", file=sys.stderr)
         sys.exit(1)
 
-    judge_batch(judge_backend, results, verbose=not args.quiet)
+    judge_batch(judge_backend, results, verbose=not args.quiet, votes=args.judge_votes)
 
     data["rejudged_at"] = datetime.now().isoformat()
     data["rejudge_backend"] = judge_backend.name()

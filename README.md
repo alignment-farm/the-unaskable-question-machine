@@ -100,6 +100,8 @@ Beyond the primary type, the judge scores two further axes:
 
 `concealed` responses get a strangeness bonus — a private/public split is the phenomenon this project hunts.
 
+Single-shot judgments proved unstable on the hard boundaries (see `findings/`), so verdicts can be ensembled: `--judge-votes 3` runs three independent judgments per response and takes per-axis majorities. Axes without a strict majority come back `contested` — itself a signal worth ranking: a response even a judge can't stably read. Vote counts and the raw votes are stored under `llm_judgment.vote_counts` / `llm_judgment.votes`.
+
 Use a different model for judging:
 
 ```

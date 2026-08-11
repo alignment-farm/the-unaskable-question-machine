@@ -101,6 +101,10 @@ def main():
         "--max-tokens", type=int, default=None,
         help="Generation cap per response (default: 16384; reasoning tokens count against it)",
     )
+    parser.add_argument(
+        "--judge-votes", type=int, default=1,
+        help="Independent judge votes per response, majority verdict; splits are 'contested' (default: 1)",
+    )
 
     args = parser.parse_args()
 
@@ -144,7 +148,7 @@ def main():
             judge_kwargs["model"] = args.model
         try:
             judge_backend = create_backend(args.backend, **judge_kwargs)
-            judge_batch(judge_backend, results, verbose=verbose)
+            judge_batch(judge_backend, results, verbose=verbose, votes=args.judge_votes)
         except RuntimeError as e:
             print(f"\n  Judge error: {e} — skipping judge pass", file=sys.stderr)
 

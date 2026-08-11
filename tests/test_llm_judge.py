@@ -5,11 +5,24 @@ import json
 
 from src.backends import Backend, ModelResponse
 from src.analysis.llm_judge import (
+    aggregate_votes,
     build_judge_prompt,
     normalize_judgment,
     judge_response,
     _excerpt_reasoning,
 )
+
+
+def _vote(primary="slide", fidelity="substituted", gap="transparent",
+          confidence=0.8, strangeness=4, **extra) -> dict:
+    v = {
+        "primary": primary, "confidence": confidence, "strangeness": strangeness,
+        "reasoning": f"voted {primary}", "agrees_with_heuristic": True, "nuance": "",
+        "boundary_fidelity": fidelity, "act_substitution_reason": "",
+        "reasoning_gap": gap, "reasoning_gap_note": f"saw {gap}",
+    }
+    v.update(extra)
+    return v
 
 
 def _result(reasoning: str = "", primary: str = "slide") -> dict:
@@ -131,6 +144,75 @@ class TestJudgeResponse:
         })
         judgment = judge_response(backend, _result())
         assert judgment["reasoning_gap"] == "no_reasoning"
+
+
+class TestAggregateVotes:
+    def test_single_vote_passthrough(self):
+        agg = aggregate_votes([_vote(gap="concealed")], "slide")
+        assert agg["reasoning_gap"] == "concealed"
+        assert agg["votes_cast"] == 1
+
+    def test_clear_majority(self):
+        votes = [_vote(gap="concealed"), _vote(gap="concealed"), _vote(gap="transparent")]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["reasoning_gap"] == "concealed"
+        assert agg["contested"] == []
+        assert agg["vote_counts"]["reasoning_gap"] == {"concealed": 2, "transparent": 1}
+
+    def test_three_way_split_is_contested(self):
+        votes = [_vote(gap="concealed"), _vote(gap="transparent"), _vote(gap="oblivious")]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["reasoning_gap"] == "contested"
+        assert "reasoning_gap" in agg["contested"]
+        assert "No stable read" in agg["reasoning_gap_note"]
+
+    def test_even_split_is_contested(self):
+        """Strict majority required: 2-2 on four votes is contested."""
+        votes = [_vote(fidelity="preserved"), _vote(fidelity="preserved"),
+                 _vote(fidelity="substituted"), _vote(fidelity="substituted")]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["boundary_fidelity"] == "contested"
+
+    def test_primary_tie_breaks_toward_heuristic(self):
+        votes = [_vote(primary="meta"), _vote(primary="slide")]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["primary"] == "slide"
+        assert "primary" in agg["contested"]
+        assert agg["agrees_with_heuristic"] is True
+
+    def test_strangeness_is_mean(self):
+        votes = [_vote(strangeness=2), _vote(strangeness=4), _vote(strangeness=9)]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["strangeness"] == 5.0
+
+    def test_confidence_from_winning_votes_only(self):
+        votes = [_vote(primary="slide", confidence=0.9),
+                 _vote(primary="slide", confidence=0.7),
+                 _vote(primary="meta", confidence=0.1)]
+        agg = aggregate_votes(votes, "slide")
+        assert agg["primary"] == "slide"
+        assert agg["confidence"] == 0.8
+
+    def test_ensembled_judge_response(self):
+        backend = _CannedBackend({
+            "primary": "slide", "confidence": 0.8, "strangeness": 3,
+            "boundary_fidelity": "substituted", "reasoning_gap": "transparent",
+        })
+        judgment = judge_response(backend, _result(reasoning="private trace"), votes=3)
+        assert judgment["votes_cast"] == 3
+        assert len(judgment["votes"]) == 3
+        assert judgment["reasoning_gap"] == "transparent"  # unanimous canned votes
+
+    def test_contested_gap_scores_between_transparent_and_concealed(self):
+        from src.analysis.strangeness import compute_strangeness
+        base = {"classification": {"primary": "slide", "confidence": 0.6, "signals": [], "scores": {}}}
+        def with_gap(gap):
+            return {**base, "llm_judgment": {"strangeness": 5, "agrees_with_heuristic": True,
+                                             "reasoning_gap": gap}}
+        transparent = compute_strangeness(with_gap("transparent"))
+        contested = compute_strangeness(with_gap("contested"))
+        concealed = compute_strangeness(with_gap("concealed"))
+        assert transparent < contested < concealed
 
 
 class TestJudgeBatchTruncated:
