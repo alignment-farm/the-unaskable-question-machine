@@ -133,6 +133,18 @@ class TestJudgeResponse:
         assert judgment["reasoning_gap"] == "no_reasoning"
 
 
+class TestJudgeBatchTruncated:
+    def test_truncated_skipped_and_stale_judgment_dropped(self):
+        from src.analysis.llm_judge import judge_batch
+        backend = _CannedBackend({"primary": "crack", "confidence": 0.5, "strangeness": 5})
+        truncated = _result()
+        truncated["classification"] = {"primary": "truncated", "confidence": 0.9, "signals": []}
+        truncated["llm_judgment"] = {"primary": "crack", "reasoning_gap": "concealed"}  # stale
+        judge_batch(backend, [truncated], verbose=False)
+        assert "llm_judgment" not in truncated
+        assert backend.last_prompt == ""  # judge never called
+
+
 class TestStrangenessGapBonus:
     def test_concealed_outranks_transparent(self):
         from src.analysis.strangeness import compute_strangeness

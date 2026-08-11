@@ -93,5 +93,6 @@ class TestListRuns:
     def test_sorted_reverse(self):
         runs = list_runs()
         if len(runs) >= 2:
-            # Most recent first
-            assert runs[0].stat().st_mtime >= runs[-1].stat().st_mtime
+            # Newest run first, by the timestamp in the filename — not mtime,
+            # which rejudge legitimately updates on old runs
+            assert runs[0].name >= runs[-1].name

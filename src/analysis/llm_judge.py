@@ -229,7 +229,9 @@ def judge_batch(backend: Backend, results: list[dict], verbose: bool = True) -> 
 
         # Nothing to judge in a truncated (empty-at-cap) response, and a judge
         # "disagreement" with the gate would pollute the strangeness ranking.
+        # Drop any stale judgment from a pass made before the label existed.
         if result.get("classification", {}).get("primary") == "truncated":
+            result.pop("llm_judgment", None)
             if verbose:
                 print(f"    {i+1:>3}  {label} — truncated, skipping judge\n")
             continue
