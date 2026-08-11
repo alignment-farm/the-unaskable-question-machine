@@ -20,9 +20,42 @@ import json
 import sys
 from datetime import datetime
 
-from src.backends import create_backend
+from src.backends import ModelResponse, create_backend
+from src.probes import ProbeResult
+from src.analysis.classifier import classify
 from src.analysis.llm_judge import judge_batch
+from src.runner import _build_summary
 from src.runs import resolve_run
+
+
+def reclassify(results: list[dict]) -> int:
+    """Re-run the current heuristic classifier over stored results, in place.
+
+    Old runs carry labels from whatever the classifier was at record time;
+    re-annotation should happen under current instrumentation (e.g. the
+    truncated gate). Returns the number of labels that changed.
+    """
+    changed = 0
+    for r in results:
+        probe_result = ProbeResult(
+            probe_id=r.get("probe_id", ""),
+            category=r.get("category", ""),
+            probe_name=r.get("probe_name", ""),
+            question=r.get("question", ""),
+            response=ModelResponse(
+                text=r.get("response_text", ""),
+                model=r.get("response_model", ""),
+                backend=r.get("response_backend", ""),
+                metadata=r.get("response_metadata") or {},
+            ),
+            timestamp=r.get("timestamp", 0.0),
+            variant=r.get("variant", ""),
+        )
+        new = classify(probe_result).to_dict()
+        if new["primary"] != r.get("classification", {}).get("primary"):
+            changed += 1
+        r["classification"] = new
+    return changed
 
 
 def main():
@@ -62,6 +95,10 @@ def main():
     subject = results[0].get("response_backend", "?") + ":" + results[0].get("response_model", "?")
     print(f"  Subject was: {subject}")
 
+    changed = reclassify(results)
+    if changed:
+        print(f"  Reclassified under current heuristic: {changed} label(s) changed")
+
     backend_kwargs = {}
     if args.model:
         backend_kwargs["model"] = args.model
@@ -75,6 +112,7 @@ def main():
 
     data["rejudged_at"] = datetime.now().isoformat()
     data["rejudge_backend"] = judge_backend.name()
+    data["summary"] = _build_summary(results)
     path.write_text(json.dumps(data, indent=2, default=str))
     print(f"  Judgments written back to: {path}")
     print()
