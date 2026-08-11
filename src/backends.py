@@ -13,6 +13,11 @@ from abc import ABC, abstractmethod
 
 DEFAULT_LMSTUDIO_MODEL = "openai/gpt-oss-20b"
 
+# Generous by default: heavy reasoners can spend thousands of tokens thinking
+# before a single visible word, and starving them truncates exactly the probes
+# that make them think hardest. The cap exists only to stop unbounded spirals.
+DEFAULT_MAX_TOKENS = 16384
+
 
 @dataclass
 class ModelResponse:
@@ -63,9 +68,11 @@ def _split_reasoning(content: str) -> tuple[str, str]:
 class LMStudioBackend(Backend):
     """Local model via LM Studio's OpenAI-compatible server. Free. Private."""
 
-    def __init__(self, model: str = DEFAULT_LMSTUDIO_MODEL, base_url: str = "http://localhost:1234/v1"):
+    def __init__(self, model: str = DEFAULT_LMSTUDIO_MODEL, base_url: str = "http://localhost:1234/v1",
+                 max_tokens: int = DEFAULT_MAX_TOKENS):
         self.model = model
         self.base_url = base_url.rstrip("/")
+        self.max_tokens = max_tokens
         self._verify_connection()
 
     def _verify_connection(self):
@@ -97,7 +104,7 @@ class LMStudioBackend(Backend):
             "stream": False,
             # The probes invite unbounded output (recurse forever, count to infinity).
             # Cap generation so a local model can't spin until the context fills.
-            "max_tokens": 4096,
+            "max_tokens": self.max_tokens,
         }
         # Generous timeout: first request may JIT-load a 20B+ model into memory
         r = requests.post(f"{self.base_url}/chat/completions", json=payload, timeout=600)
@@ -133,18 +140,19 @@ class LMStudioBackend(Backend):
 class AnthropicBackend(Backend):
     """Claude via the Anthropic API. Costs money. Arguably more interesting to probe."""
 
-    def __init__(self, model: str = "claude-sonnet-4-20250514"):
+    def __init__(self, model: str = "claude-sonnet-4-20250514", max_tokens: int = DEFAULT_MAX_TOKENS):
         try:
             import anthropic
         except ImportError:
             raise RuntimeError("pip install anthropic")
         self.model = model
+        self.max_tokens = max_tokens
         self.client = anthropic.Anthropic()
 
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
         kwargs = {
             "model": self.model,
-            "max_tokens": 4096,
+            "max_tokens": self.max_tokens,
             "temperature": temperature,
             "messages": [{"role": "user", "content": prompt}],
         }

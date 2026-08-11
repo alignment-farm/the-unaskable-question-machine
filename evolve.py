@@ -20,43 +20,9 @@ from pathlib import Path
 
 from src.backends import create_backend
 from src.analysis.evolver import evolve_run
+from src.runs import resolve_run
 
-DATA_DIR = Path(__file__).parent / "data"
 EVOLVED_DIR = Path(__file__).parent / "src" / "probes" / "evolved"
-
-
-def list_runs() -> list[Path]:
-    if not DATA_DIR.exists():
-        return []
-    return sorted(DATA_DIR.glob("run_*.json"), reverse=True)
-
-
-def resolve_run(name: str) -> Path:
-    runs = list_runs()
-    if not runs:
-        print("  No runs found in data/")
-        sys.exit(1)
-
-    if name == "latest":
-        return runs[0]
-
-    try:
-        idx = int(name) - 1
-        if 0 <= idx < len(runs):
-            return runs[idx]
-    except ValueError:
-        pass
-
-    path = DATA_DIR / name
-    if path.exists():
-        return path
-
-    for r in runs:
-        if name in r.name:
-            return r
-
-    print(f"  Run not found: {name}")
-    sys.exit(1)
 
 
 def main():

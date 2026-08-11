@@ -108,6 +108,16 @@ uv run run.py --judge --judge-model prism-ml/bonsai-27b
 
 Judge results are stored alongside heuristic classifications in the output JSON under `llm_judgment`.
 
+Runs recorded without `--judge` (or judged under an older schema) can be re-annotated in place:
+
+```
+uv run rejudge.py                     # rejudge latest run
+uv run rejudge.py 3                   # rejudge run #3
+uv run rejudge.py latest --model prism-ml/bonsai-27b
+```
+
+Generation is capped at 16,384 tokens per response by default — generous, because reasoning tokens count against it and heavy reasoners think longest on exactly the probes that matter. Tune with `--max-tokens`; responses that still hit the cap with an empty answer classify as `truncated`.
+
 ## Strange Gallery
 
 Browse the weirdest responses ranked by strangeness — full Q&A conversations, most interesting first:
@@ -165,9 +175,11 @@ Every result includes the question, full response text, model metadata, and a cl
 run.py                              CLI — run probes
 view.py                             CLI — explore results, gallery, compare
 evolve.py                           CLI — breed new probes from cracks
+rejudge.py                          CLI — re-run the judge over an existing run
 src/
   backends.py                       LM Studio + Anthropic model backends
   runner.py                         Orchestration, progress, output
+  runs.py                           Run-file resolution shared by the CLIs
   probes/                           Probe definitions (one file per category)
     temporal_self_reference.py
     true_randomness.py

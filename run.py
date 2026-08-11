@@ -97,6 +97,10 @@ def main():
         "--judge-model", type=str, default=None,
         help="Model for the judge (defaults to same as probing model)",
     )
+    parser.add_argument(
+        "--max-tokens", type=int, default=None,
+        help="Generation cap per response (default: 16384; reasoning tokens count against it)",
+    )
 
     args = parser.parse_args()
 
@@ -111,6 +115,8 @@ def main():
     backend_kwargs = {}
     if args.model:
         backend_kwargs["model"] = args.model
+    if args.max_tokens:
+        backend_kwargs["max_tokens"] = args.max_tokens
     try:
         backend = create_backend(args.backend, **backend_kwargs)
     except RuntimeError as e:

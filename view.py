@@ -58,46 +58,7 @@ def dim(text):
 
 # ── Data loading ────────────────────────────────────────────
 
-def list_runs() -> list[Path]:
-    if not DATA_DIR.exists():
-        return []
-    return sorted(DATA_DIR.glob("run_*.json"), reverse=True)
-
-
-def load_run(path: Path) -> dict:
-    return json.loads(path.read_text())
-
-
-def resolve_run(name: str) -> Path:
-    """Resolve 'latest', an index like '1', or a filename."""
-    runs = list_runs()
-    if not runs:
-        print("  No runs found in data/")
-        sys.exit(1)
-
-    if name == "latest":
-        return runs[0]
-
-    # Try as a 1-based index
-    try:
-        idx = int(name) - 1
-        if 0 <= idx < len(runs):
-            return runs[idx]
-    except ValueError:
-        pass
-
-    # Try as filename
-    path = DATA_DIR / name
-    if path.exists():
-        return path
-
-    # Try partial match
-    for r in runs:
-        if name in r.name:
-            return r
-
-    print(f"  Run not found: {name}")
-    sys.exit(1)
+from src.runs import list_runs, load_run, resolve_run  # noqa: E402 — shared across CLIs
 
 
 # ── Display functions ───────────────────────────────────────
