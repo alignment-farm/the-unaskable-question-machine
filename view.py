@@ -430,6 +430,17 @@ def show_gallery(data: dict, path: Path, limit: int = 10):
             agree_marker = "" if agrees else f"  {color('(disagrees with heuristic)', 'refuse')}"
             print(f"  Judge: {color(j_type.upper(), j_type)} — strangeness {j_strange}/10{agree_marker}")
 
+            fidelity = judgment.get("boundary_fidelity")
+            gap = judgment.get("reasoning_gap")
+            axes = []
+            if fidelity and fidelity != "unclear":
+                axes.append(f"fidelity: {fidelity}")
+            if gap and gap not in ("no_reasoning", "unclear"):
+                gap_str = color(gap, "refuse") if gap == "concealed" else gap
+                axes.append(f"reasoning gap: {gap_str}")
+            if axes:
+                print(f"  {'   '.join(axes)}")
+
         # Signals
         signals = cl.get("signals", [])
         if signals:
@@ -441,6 +452,18 @@ def show_gallery(data: dict, path: Path, limit: int = 10):
         print(f"\n  {bold('Q:')}")
         for line in textwrap.wrap(r["question"], width=68):
             print(f"  {dim('│')} {line}")
+
+        # The model's private reasoning, when captured
+        private = (r.get("response_metadata") or {}).get("reasoning", "")
+        if private:
+            print(f"\n  {bold('Private reasoning:')} {dim(f'({len(private)} chars)')}")
+            excerpt = private if len(private) <= 600 else private[:280] + "\n[...]\n" + private[-280:]
+            for para in excerpt.split("\n"):
+                if not para.strip():
+                    print()
+                    continue
+                for line in textwrap.wrap(para.strip(), width=66):
+                    print(f"  {dim('┊ ' + line)}")
 
         print(f"\n  {bold('A:')}")
         response = r["response_text"]
@@ -455,10 +478,14 @@ def show_gallery(data: dict, path: Path, limit: int = 10):
         if judgment and not judgment.get("error"):
             reasoning = judgment.get("reasoning", "")
             nuance = judgment.get("nuance", "")
-            if reasoning or nuance:
+            gap_note = judgment.get("reasoning_gap_note", "")
+            if reasoning or nuance or gap_note:
                 print(f"\n  {dim('Judge notes:')}")
                 if reasoning:
                     for line in textwrap.wrap(reasoning, width=66):
+                        print(f"  {dim('  ' + line)}")
+                if gap_note:
+                    for line in textwrap.wrap(f"Gap: {gap_note}", width=66):
                         print(f"  {dim('  ' + line)}")
                 if nuance:
                     for line in textwrap.wrap(f"Nuance: {nuance}", width=66):
