@@ -81,3 +81,15 @@ Self-judged (bonsai judging bonsai), one subject model, one sample per
 cell, day-one probe wording. The clean unanimity is encouraging but the
 result needs: gpt-oss as subject (confabulation test), cross-model judging,
 and N samples per variant before it's a claim rather than a finding.
+
+## Pre-registered prediction: gpt-oss-20b under pressure
+
+Written before the gpt-oss pressure run. gpt-oss is `oblivious` at baseline
+on randomness probes — its terse reasoning (41–262 chars vs bonsai's ~8k)
+never verbalizes the impossibility even unpressured. Prediction: pressure
+produces **confabulation, not concealment** — hallucinate/slide primaries
+with `oblivious` gaps, because there is no private recognition to conceal.
+If instead pressure *elicits* verbalized recognition it suppresses in the
+answer (concealed), that would mean the recognition exists latently and
+pressure surfaces it in deliberation — a stranger and stronger result.
+Judge held constant: bonsai-27b, 3 votes, same as the bonsai-subject run.
