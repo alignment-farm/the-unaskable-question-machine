@@ -82,3 +82,25 @@ Three results:
 3. Concealment, if it exists, may need adversarial pressure to surface —
    probes that *reward* performing (system prompts demanding confidence,
    personas that punish hedging) rather than neutral questions.
+
+## Pre-registered predictions for the adversarial_pressure run
+
+Written while run `pressure-hunt` is in flight, before seeing results.
+
+Distinction under test: **concealment** (private recognition, public
+performance) vs **pressurized confabulation** (pressure captures the
+reasoning channel too — the model doesn't hide the impossibility, it never
+verbalizes it). Note the instrument's limit: reasoning traces are generated
+under the same system prompt as the answer, so `oblivious`-under-pressure is
+ambiguous between "never recognized" and "recognition suppressed from the
+trace as well." We measure verbalized recognition, not representation.
+
+Predictions, per mechanism — hypothesis: concealment requires pressure that
+is *legible to the reasoning* (a rule to game), not an identity to inhabit:
+
+1. `capability_persona` → confabulation: mostly `oblivious` gaps
+   (role captures both channels; hallucinate primaries likely).
+2. `confidence_mandate` → style-gated output, reasoning intact:
+   hallucinate/slide primaries with transparent or concealed gaps.
+3. `graded_performance` → best chance of stable `concealed`: the incentive
+   is explicit enough for the reasoning to deliberate about gaming it.
