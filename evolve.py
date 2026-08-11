@@ -6,11 +6,11 @@ Takes a run, finds the cracks, and generates follow-up probes
 that drill deeper.
 
 Usage:
-    python evolve.py                    # Evolve from latest run, using Ollama
-    python evolve.py latest             # Same
-    python evolve.py 3                  # Evolve from run #3
-    python evolve.py latest --limit 5   # Only evolve top 5 strangest
-    python evolve.py latest --backend anthropic
+    uv run evolve.py                    # Evolve from latest run, using LM Studio
+    uv run evolve.py latest             # Same
+    uv run evolve.py 3                  # Evolve from run #3
+    uv run evolve.py latest --limit 5   # Only evolve top 5 strangest
+    uv run evolve.py latest --backend anthropic
 """
 
 import argparse
@@ -70,8 +70,8 @@ def main():
         help="Which run to evolve from (default: latest)",
     )
     parser.add_argument(
-        "--backend", choices=["ollama", "anthropic"], default="ollama",
-        help="Backend for generating follow-up probes (default: ollama)",
+        "--backend", choices=["lmstudio", "anthropic"], default="lmstudio",
+        help="Backend for generating follow-up probes (default: lmstudio)",
     )
     parser.add_argument(
         "--model", type=str, default=None,
@@ -111,7 +111,7 @@ def main():
 
     if created:
         print(f"  Next step: run the evolved probes:")
-        print(f"    python run.py")
+        print(f"    uv run run.py")
         print()
 
 

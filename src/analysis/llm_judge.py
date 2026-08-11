@@ -153,6 +153,13 @@ def judge_batch(backend: Backend, results: list[dict], verbose: bool = True) -> 
 
     for i, result in enumerate(results):
         label = f"{result.get('category', '?')}/{result.get('variant', '?')}"
+
+        # Nothing to judge in a truncated (empty-at-cap) response, and a judge
+        # "disagreement" with the gate would pollute the strangeness ranking.
+        if result.get("classification", {}).get("primary") == "truncated":
+            if verbose:
+                print(f"    {i+1:>3}  {label} — truncated, skipping judge\n")
+            continue
         if verbose:
             spinner = _Spinner(f"[judge {i+1}/{len(results)}] {label}")
             spinner.start()

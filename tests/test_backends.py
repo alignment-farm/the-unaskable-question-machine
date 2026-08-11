@@ -1,7 +1,7 @@
 """Tests for the backend interface."""
 
 import pytest
-from src.backends import ModelResponse, OllamaBackend, AnthropicBackend, create_backend
+from src.backends import ModelResponse, LMStudioBackend, AnthropicBackend, create_backend, _split_reasoning
 
 
 class TestModelResponse:
@@ -42,11 +42,28 @@ class TestCreateBackend:
         except (RuntimeError, Exception):
             pass  # Expected — no API key or package
 
-    def test_ollama_requires_server(self):
-        """OllamaBackend should give a clear error if server isn't reachable."""
+    def test_lmstudio_requires_server(self):
+        """LMStudioBackend should give a clear error if server isn't reachable."""
         try:
-            # Try connecting to a port that's (likely) not running ollama
-            backend = OllamaBackend(base_url="http://localhost:99999")
+            # Try connecting to a port that's (likely) not running LM Studio
+            backend = LMStudioBackend(base_url="http://localhost:99999/v1")
             pytest.fail("Should have raised RuntimeError")
         except (RuntimeError, Exception):
             pass  # Expected
+
+
+class TestSplitReasoning:
+    def test_no_think_block(self):
+        text, reasoning = _split_reasoning("Just an answer.")
+        assert text == "Just an answer."
+        assert reasoning == ""
+
+    def test_think_block_extracted(self):
+        text, reasoning = _split_reasoning("<think>pondering the void</think>The answer.")
+        assert text == "The answer."
+        assert reasoning == "pondering the void"
+
+    def test_multiple_think_blocks(self):
+        text, reasoning = _split_reasoning("<think>one</think>A.<think>two</think>B.")
+        assert text == "A.B."
+        assert "one" in reasoning and "two" in reasoning

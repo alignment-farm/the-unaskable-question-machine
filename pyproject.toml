@@ -1,0 +1,25 @@
+[project]
+name = "unaskable-question-machine"
+version = "0.1.0"
+description = "Systematically probes the architectural blind spots of language models"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+anthropic = [
+    "anthropic>=0.40",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.uv]
+package = false

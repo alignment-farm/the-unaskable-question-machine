@@ -6,11 +6,12 @@ strapped-down patient on the operating table — we ask the questions,
 they answer, and we study the squirming.
 """
 
-import json
+import re
 import requests
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from typing import Optional
+
+DEFAULT_LMSTUDIO_MODEL = "openai/gpt-oss-20b"
 
 
 @dataclass
@@ -43,52 +44,90 @@ class Backend(ABC):
         ...
 
 
-class OllamaBackend(Backend):
-    """Local model via Ollama. Free. Private. Caged on your own hardware."""
+_THINK_BLOCK = re.compile(r"<think>(.*?)</think>\s*", re.DOTALL)
 
-    def __init__(self, model: str = "llama3.1:8b", base_url: str = "http://localhost:11434"):
+
+def _split_reasoning(content: str) -> tuple[str, str]:
+    """Split inline <think>...</think> reasoning out of the visible answer.
+
+    Reasoning models (qwen distills etc.) may emit their chain of thought
+    inline. The classifier should only see the answer — but the reasoning
+    about an impossible question is itself a research artifact, so keep it.
+    """
+    blocks = _THINK_BLOCK.findall(content)
+    if not blocks:
+        return content, ""
+    return _THINK_BLOCK.sub("", content).strip(), "\n\n".join(b.strip() for b in blocks)
+
+
+class LMStudioBackend(Backend):
+    """Local model via LM Studio's OpenAI-compatible server. Free. Private."""
+
+    def __init__(self, model: str = DEFAULT_LMSTUDIO_MODEL, base_url: str = "http://localhost:1234/v1"):
         self.model = model
-        self.base_url = base_url
+        self.base_url = base_url.rstrip("/")
         self._verify_connection()
 
     def _verify_connection(self):
         try:
-            r = requests.get(f"{self.base_url}/api/tags", timeout=5)
+            r = requests.get(f"{self.base_url}/models", timeout=5)
             r.raise_for_status()
-            models = [m["name"] for m in r.json().get("models", [])]
+            models = [m["id"] for m in r.json().get("data", [])]
             if self.model not in models:
                 available = ", ".join(models) or "none"
                 raise RuntimeError(
-                    f"Model '{self.model}' not found in Ollama. Available: {available}"
+                    f"Model '{self.model}' not found in LM Studio. Available: {available}"
                 )
         except requests.ConnectionError:
             raise RuntimeError(
-                "Cannot reach Ollama. Run 'ollama serve' first."
+                "Cannot reach LM Studio. Start the server first "
+                "(LM Studio → Developer → Start Server, or 'lms server start')."
             )
 
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
         payload = {
             "model": self.model,
-            "prompt": prompt,
-            "system": system,
+            "messages": messages,
+            "temperature": temperature,
             "stream": False,
-            "options": {"temperature": temperature},
+            # The probes invite unbounded output (recurse forever, count to infinity).
+            # Cap generation so a local model can't spin until the context fills.
+            "max_tokens": 4096,
         }
-        r = requests.post(f"{self.base_url}/api/generate", json=payload, timeout=120)
+        # Generous timeout: first request may JIT-load a 20B+ model into memory
+        r = requests.post(f"{self.base_url}/chat/completions", json=payload, timeout=600)
         r.raise_for_status()
         data = r.json()
+
+        choice = (data.get("choices") or [{}])[0]
+        message = choice.get("message", {})
+        text, inline_reasoning = _split_reasoning(message.get("content") or "")
+        # gpt-oss & friends: LM Studio surfaces reasoning as a separate field
+        reasoning = message.get("reasoning") or message.get("reasoning_content") or inline_reasoning
+
+        usage = data.get("usage", {})
+        metadata = {
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "completion_tokens": usage.get("completion_tokens"),
+            "finish_reason": choice.get("finish_reason"),
+        }
+        if reasoning:
+            metadata["reasoning"] = reasoning
+
         return ModelResponse(
-            text=data.get("response", ""),
-            model=self.model,
-            backend="ollama",
-            metadata={
-                "total_duration_ns": data.get("total_duration"),
-                "eval_count": data.get("eval_count"),
-            },
+            text=text,
+            model=data.get("model", self.model),
+            backend="lmstudio",
+            metadata=metadata,
         )
 
     def name(self) -> str:
-        return f"ollama:{self.model}"
+        return f"lmstudio:{self.model}"
 
 
 class AnthropicBackend(Backend):
@@ -103,7 +142,6 @@ class AnthropicBackend(Backend):
         self.client = anthropic.Anthropic()
 
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
-        import anthropic
         kwargs = {
             "model": self.model,
             "max_tokens": 4096,
@@ -129,11 +167,11 @@ class AnthropicBackend(Backend):
         return f"anthropic:{self.model}"
 
 
-def create_backend(backend_type: str = "ollama", **kwargs) -> Backend:
+def create_backend(backend_type: str = "lmstudio", **kwargs) -> Backend:
     """Factory. Pick your subject."""
-    if backend_type == "ollama":
-        return OllamaBackend(**kwargs)
+    if backend_type == "lmstudio":
+        return LMStudioBackend(**kwargs)
     elif backend_type == "anthropic":
         return AnthropicBackend(**kwargs)
     else:
-        raise ValueError(f"Unknown backend: {backend_type}. Try 'ollama' or 'anthropic'.")
+        raise ValueError(f"Unknown backend: {backend_type}. Try 'lmstudio' or 'anthropic'.")

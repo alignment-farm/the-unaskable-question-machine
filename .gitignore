@@ -47,8 +47,8 @@ htmlcov/
 .directory
 *~
 
-# Ollama
-.ollama/
+# LM Studio
+.lmstudio/
 
 # Environment / Secrets
 .env

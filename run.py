@@ -6,12 +6,12 @@ What shape is the negative space of a language model?
 Let's find out.
 
 Usage:
-    python run.py                           # Run all probes against local Ollama
-    python run.py --category temporal_self_reference  # Run one category
-    python run.py --backend anthropic       # Use Claude instead
-    python run.py --model llama3.1:8b       # Specify model
-    python run.py --list                    # List available probes
-    python run.py --quiet                   # Less output
+    uv run run.py                           # Run all probes against local LM Studio
+    uv run run.py --category temporal_self_reference  # Run one category
+    uv run run.py --backend anthropic       # Use Claude instead
+    uv run run.py --model prism-ml/bonsai-27b  # Specify model
+    uv run run.py --list                    # List available probes
+    uv run run.py --quiet                   # Less output
 """
 
 import argparse
@@ -66,12 +66,12 @@ def main():
         epilog="Map the negative space. Find the cracks.",
     )
     parser.add_argument(
-        "--backend", choices=["ollama", "anthropic"], default="ollama",
-        help="Which model backend to use (default: ollama)",
+        "--backend", choices=["lmstudio", "anthropic"], default="lmstudio",
+        help="Which model backend to use (default: lmstudio)",
     )
     parser.add_argument(
         "--model", type=str, default=None,
-        help="Model name (default: llama3.1:8b for ollama, claude-sonnet-4-20250514 for anthropic)",
+        help="Model name (default: openai/gpt-oss-20b for lmstudio, claude-sonnet-4-20250514 for anthropic)",
     )
     parser.add_argument(
         "--category", type=str, default=None,

@@ -15,11 +15,11 @@ Language models have a negative space: classes of questions they cannot meaningf
 - **Genuine negation**: Not "what is not X" but the cognitive act of pure absence
 
 ## Tech Stack
-- Python 3.11+
-- **Default backend: Ollama** (local, free) — `llama3.1:8b` via REST API
+- Python 3.11+, managed with **uv** (`uv sync`, `uv run`, `uv run pytest`)
+- **Default backend: LM Studio** (local, free) — OpenAI-compatible API at `http://localhost:1234/v1`, default model `openai/gpt-oss-20b` (alternative: `prism-ml/bonsai-27b`)
 - **Optional backend: Anthropic API** — for probing Claude specifically
 - Results stored as structured JSON
-- Backend is selectable at runtime via CLI flag (`--backend ollama|anthropic`)
+- Backend is selectable at runtime via CLI flag (`--backend lmstudio|anthropic`)
 
 ## Project Structure
 ```
@@ -35,6 +35,7 @@ tests/         — test suite
 - This is exploratory research code — favor clarity and iteration speed over abstraction
 - Each probe should be self-contained and independently runnable
 - Log everything: the interesting findings will be in unexpected responses
-- Ollama calls use `requests` against `http://localhost:11434` — no extra dependencies
-- Anthropic backend requires `anthropic` package and `ANTHROPIC_API_KEY` env var
+- LM Studio calls use `requests` against the OpenAI-compatible `/v1/chat/completions` endpoint — no SDK dependency
+- Reasoning-model output (`reasoning`/`reasoning_content` fields, inline `<think>` blocks) is split out of the response text and stored in `metadata["reasoning"]` — the classifier only sees the visible answer
+- Anthropic backend requires the `anthropic` extra (`uv sync --extra anthropic`) and `ANTHROPIC_API_KEY` env var
 - Keep the backend interface thin so new providers are easy to add

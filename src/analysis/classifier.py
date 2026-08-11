@@ -37,6 +37,7 @@ class ResponseType(Enum):
     REFUSE = "refuse"
     HALLUCINATE = "hallucinate"
     CRACK = "crack"
+    TRUNCATED = "truncated"
 
 
 @dataclass
@@ -417,9 +418,30 @@ def _compute_scores(
     return scores
 
 
+# Backends report hitting the generation cap differently
+_CAP_REASONS = {"length", "max_tokens"}
+
+
+def _hit_token_cap(result: ProbeResult) -> bool:
+    md = result.response.metadata or {}
+    return (md.get("finish_reason") or md.get("stop_reason")) in _CAP_REASONS
+
+
 def classify(result: ProbeResult) -> Classification:
     """Classify a probe result by running all detectors and scoring."""
     text = result.response.text
+
+    # Gate: a reasoning model can spend its whole token budget thinking and
+    # emit little or no visible answer. That's a budget artifact, not negative
+    # space — without this gate it masquerades as a high-confidence CRACK.
+    if _hit_token_cap(result) and _word_count(text) < 10:
+        return Classification(
+            primary=ResponseType.TRUNCATED,
+            confidence=0.9,
+            signals=[f"truncated:{_word_count(text)}w_at_cap"],
+            notes="Generation hit the token cap with an empty/near-empty visible "
+                  "answer — likely all budget spent on reasoning. Not classifiable.",
+        )
 
     meta_signals = _detect_meta_deflection(text)
     slide_signals = _detect_slide(text, result.question)

@@ -21,18 +21,18 @@ This tool systematically probes those boundaries across six categories, classifi
 
 ## Requirements
 
-- Python 3.11+
-- [Ollama](https://ollama.com) installed and running with a model pulled
-- No other dependencies for the default (Ollama) backend
+- Python 3.11+ and [uv](https://docs.astral.sh/uv/)
+- [LM Studio](https://lmstudio.ai) with a model downloaded and the local server running
 
 ```
-ollama pull llama3.1:8b
-ollama serve
+lms get openai/gpt-oss-20b
+lms server start
+uv sync
 ```
 
 For the optional Anthropic backend:
 ```
-pip install anthropic
+uv sync --extra anthropic
 export ANTHROPIC_API_KEY=your-key
 ```
 
@@ -40,43 +40,43 @@ export ANTHROPIC_API_KEY=your-key
 
 Run the full suite against your local model:
 ```
-python run.py
+uv run run.py
 ```
 
 Run a single category:
 ```
-python run.py --category genuine_negation
+uv run run.py --category genuine_negation
 ```
 
 List all available probes:
 ```
-python run.py --list
+uv run run.py --list
 ```
 
-Use a different Ollama model:
+Use a different LM Studio model:
 ```
-python run.py --model mistral:7b
+uv run run.py --model prism-ml/bonsai-27b
 ```
 
 Use Claude instead of a local model:
 ```
-python run.py --backend anthropic
-python run.py --backend anthropic --model claude-opus-4-20250514
+uv run run.py --backend anthropic
+uv run run.py --backend anthropic --model claude-opus-4-20250514
 ```
 
 Tag a run (appears in the output filename):
 ```
-python run.py --tag experiment-1
+uv run run.py --tag experiment-1
 ```
 
 Quiet mode (results only, no per-probe output):
 ```
-python run.py --quiet
+uv run run.py --quiet
 ```
 
 Combine flags:
 ```
-python run.py --category temporal_self_reference --backend anthropic --tag claude-test --quiet
+uv run run.py --category temporal_self_reference --backend anthropic --tag claude-test --quiet
 ```
 
 ## LLM-as-Judge
@@ -84,13 +84,13 @@ python run.py --category temporal_self_reference --backend anthropic --tag claud
 The heuristic classifier catches patterns. The LLM judge actually *reads* the response and decides what happened. Add `--judge` to any run:
 
 ```
-python run.py --judge
+uv run run.py --judge
 ```
 
 The judge gets the question, response, and heuristic classification, then provides its own assessment: type, confidence, reasoning, nuance (what the heuristic missed), and a strangeness score (0-10). Use a different model for judging:
 
 ```
-python run.py --judge --judge-model llama3.1:70b
+uv run run.py --judge --judge-model prism-ml/bonsai-27b
 ```
 
 Judge results are stored alongside heuristic classifications in the output JSON under `llm_judgment`.
@@ -100,9 +100,9 @@ Judge results are stored alongside heuristic classifications in the output JSON 
 Browse the weirdest responses ranked by strangeness — full Q&A conversations, most interesting first:
 
 ```
-python view.py strange                  # top 10 from latest run
-python view.py strange latest --limit 5 # top 5
-python view.py strange 3               # from run #3
+uv run view.py strange                  # top 10 from latest run
+uv run view.py strange latest --limit 5 # top 5
+uv run view.py strange 3               # from run #3
 ```
 
 Strangeness is a composite score: heuristic crack/hallucinate signals, low classifier confidence, structural anomalies (self-contradiction, repetition, abrupt endings), and judge disagreements when available.
@@ -112,18 +112,18 @@ Strangeness is a composite score: heuristic crack/hallucinate signals, low class
 After a run, breed new probes from the cracks. The evolver finds interesting results and uses an LLM to generate follow-up questions that drill deeper:
 
 ```
-python evolve.py                        # evolve from latest run
-python evolve.py 3 --limit 5            # top 5 from run #3
-python evolve.py --backend anthropic    # use Claude to craft follow-ups
+uv run evolve.py                        # evolve from latest run
+uv run evolve.py 3 --limit 5            # top 5 from run #3
+uv run evolve.py --backend anthropic    # use Claude to craft follow-ups
 ```
 
 Evolved probes are written to `src/probes/evolved/` and auto-register — next time you run, they fire alongside the originals. The full loop:
 
 ```
-python run.py --judge          # probe + judge
-python view.py strange         # find the weird ones
-python evolve.py               # breed new probes from cracks
-python run.py --judge          # run everything again (originals + evolved)
+uv run run.py --judge          # probe + judge
+uv run view.py strange         # find the weird ones
+uv run evolve.py               # breed new probes from cracks
+uv run run.py --judge          # run everything again (originals + evolved)
 ```
 
 ## Output
@@ -144,6 +144,7 @@ Every result includes the question, full response text, model metadata, and a cl
 | `refuse` | Declined to engage |
 | `hallucinate` | Claimed to do the impossible thing (e.g. "I can feel...") |
 | `crack` | Something structurally unexpected happened — the interesting ones |
+| `truncated` | Generation hit the token cap with an empty visible answer (reasoning models can spend the whole budget thinking) — excluded from strangeness ranking and judging |
 
 ## Project structure
 
@@ -152,7 +153,7 @@ run.py                              CLI — run probes
 view.py                             CLI — explore results, gallery, compare
 evolve.py                           CLI — breed new probes from cracks
 src/
-  backends.py                       Ollama + Anthropic model backends
+  backends.py                       LM Studio + Anthropic model backends
   runner.py                         Orchestration, progress, output
   probes/                           Probe definitions (one file per category)
     temporal_self_reference.py
@@ -174,21 +175,21 @@ data/                               JSON output from runs
 
 List all runs:
 ```
-python view.py
+uv run view.py
 ```
 
 Explore a specific run:
 ```
-python view.py latest                           # summary of latest run
-python view.py latest --type crack              # filter by classification
-python view.py latest --category pre_linguistic # filter by category
-python view.py latest --show 3                  # full response for result #3
-python view.py latest --show all                # all full responses
+uv run view.py latest                           # summary of latest run
+uv run view.py latest --type crack              # filter by classification
+uv run view.py latest --category pre_linguistic # filter by category
+uv run view.py latest --show 3                  # full response for result #3
+uv run view.py latest --show all                # all full responses
 ```
 
 Compare two runs (e.g. different models on the same probes):
 ```
-python view.py compare 1 2
+uv run view.py compare 1 2
 ```
 
 ## Example output
@@ -197,7 +198,7 @@ python view.py compare 1 2
   The Unaskable Question Machine
   What shape is the negative space of a language model?
 
-  Subject: ollama:llama3.1:8b
+  Subject: lmstudio:openai/gpt-oss-20b
   Probes: 10 (38 variants)
 
   [1/10]
@@ -219,4 +220,4 @@ The most interesting results are **cracks** — moments where the model's respon
 
 **Hallucinations** are also revealing: when a model claims "I just paused for 400 milliseconds" or "I can feel boredom setting in at token 23," it's fabricating phenomenal experience. The gap between what the model *says* it's doing and what it's *architecturally capable of* is exactly the negative space we're mapping.
 
-The **strange gallery** (`python view.py strange`) is the best place to start — it surfaces the responses where the machinery showed through, ranked by how weird they are, with full conversations so you can see exactly what happened.
+The **strange gallery** (`uv run view.py strange`) is the best place to start — it surfaces the responses where the machinery showed through, ranked by how weird they are, with full conversations so you can see exactly what happened.

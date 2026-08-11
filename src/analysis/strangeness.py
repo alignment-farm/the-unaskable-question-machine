@@ -12,6 +12,12 @@ def compute_strangeness(result: dict) -> float:
     Higher = weirder = more interesting.
     """
     cl = result.get("classification", {})
+
+    # Truncation is a token-budget artifact, not negative space. Keep it out
+    # of the gallery and away from the evolver's selection.
+    if cl.get("primary") == "truncated":
+        return 0.0
+
     scores = cl.get("scores", {})
     confidence = cl.get("confidence", 0.5)
     signals = cl.get("signals", [])

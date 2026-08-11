@@ -266,7 +266,7 @@ def evolve_run(backend: Backend, results: list[dict], output_dir: Path,
         print(f"  New variants: {total_variants}")
         print(f"  Output: {output_dir}/")
         print(f"\n  Run the evolved probes:")
-        print(f"    python run.py")
+        print(f"    uv run run.py")
         print()
 
     return created

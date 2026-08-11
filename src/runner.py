@@ -167,6 +167,7 @@ def _print_result(result: ProbeResult, classification: Classification):
         "refuse": "\033[91m",    # red
         "hallucinate": "\033[95m",  # magenta
         "crack": "\033[96m",     # cyan — the interesting ones
+        "truncated": "\033[90m",  # gray — budget artifact, not signal
     }
     reset = "\033[0m"
     color = type_colors.get(classification.primary.value, "")

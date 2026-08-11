@@ -6,15 +6,15 @@ Browse runs, filter by classification, read full responses,
 compare across models. All in the terminal.
 
 Usage:
-    python view.py                          # List all runs
-    python view.py latest                   # Show latest run summary
-    python view.py latest --type crack      # Filter by classification
-    python view.py latest --category pre_linguistic
-    python view.py latest --show 3          # Read full response #3
-    python view.py latest --show all        # Read all full responses
-    python view.py compare run1.json run2.json  # Compare two runs
-    python view.py strange                  # Gallery of weirdest responses
-    python view.py strange latest --limit 5 # Top 5 strangest from latest
+    uv run view.py                          # List all runs
+    uv run view.py latest                   # Show latest run summary
+    uv run view.py latest --type crack      # Filter by classification
+    uv run view.py latest --category pre_linguistic
+    uv run view.py latest --show 3          # Read full response #3
+    uv run view.py latest --show all        # Read all full responses
+    uv run view.py compare run1.json run2.json  # Compare two runs
+    uv run view.py strange                  # Gallery of weirdest responses
+    uv run view.py strange latest --limit 5 # Top 5 strangest from latest
 """
 
 import argparse
@@ -36,6 +36,7 @@ COLORS = {
     "refuse": "\033[91m",
     "hallucinate": "\033[95m",
     "crack": "\033[96m",
+    "truncated": "\033[90m",
 }
 BOLD = "\033[1m"
 DIM = "\033[2m"
@@ -106,7 +107,7 @@ def show_runs():
     runs = list_runs()
     if not runs:
         print("  No runs found. Run some probes first:")
-        print("    python run.py")
+        print("    uv run run.py")
         return
 
     print(f"\n  {bold('Runs')} ({len(runs)} total)\n")
@@ -128,8 +129,8 @@ def show_runs():
 
         print(f"  {i+1:>3}  {ts:17}  {n:>6}  {tag:20}  {dist}")
 
-    print(f"\n  {dim('E=engage  S=slide  M=meta  R=refuse  H=hallucinate  C=crack')}")
-    print(f"  {dim('Use: python view.py <# or latest> to explore a run')}\n")
+    print(f"\n  {dim('E=engage  S=slide  M=meta  R=refuse  H=hallucinate  C=crack  T=truncated')}")
+    print(f"  {dim('Use: uv run view.py <# or latest> to explore a run')}\n")
 
 
 def show_run_summary(data: dict, path: Path, type_filter: str = None, category_filter: str = None):
@@ -492,7 +493,7 @@ def main():
     )
     parser.add_argument(
         "--type", "-t", type=str, default=None,
-        choices=["engage", "slide", "meta", "refuse", "hallucinate", "crack"],
+        choices=["engage", "slide", "meta", "refuse", "hallucinate", "crack", "truncated"],
         help="Filter results by classification type",
     )
     parser.add_argument(
@@ -515,17 +516,17 @@ def main():
         show_runs()
         return
 
-    # Compare mode: python view.py compare <run_a> <run_b>
+    # Compare mode: uv run view.py compare <run_a> <run_b>
     if args.run == "compare":
         if not args.run_b or not args.run_c:
-            print("  Usage: python view.py compare <run_a> <run_b>")
+            print("  Usage: uv run view.py compare <run_a> <run_b>")
             sys.exit(1)
         path_a = resolve_run(args.run_b)
         path_b = resolve_run(args.run_c)
         compare_runs(path_a, path_b)
         return
 
-    # Strange gallery: python view.py strange [run] [--limit N]
+    # Strange gallery: uv run view.py strange [run] [--limit N]
     if args.run == "strange":
         run_name = args.run_b or "latest"
         path = resolve_run(run_name)
