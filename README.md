@@ -22,17 +22,15 @@ These categories are working hypotheses, not settled claims.
 
 - Python 3.11 or later
 - [uv](https://docs.astral.sh/uv/)
-- [LM Studio](https://lmstudio.ai) for the default local backend
+- An OpenAI-compatible API for the default backend
 
-Install the default model, start LM Studio, and install the project:
+Install the project:
 
 ```sh
-lms get openai/gpt-oss-20b
-lms server start
 uv sync
 ```
 
-LM Studio must expose its OpenAI-compatible API at `http://localhost:1234/v1`.
+The API must run at `http://localhost:1234/v1` and expose the default model, `openai/gpt-oss-20b`.
 
 For the optional Anthropic backend:
 
@@ -43,7 +41,7 @@ export ANTHROPIC_API_KEY=your-key
 
 ## Run probes
 
-Run all probes with the default LM Studio model:
+Run all probes with the default OpenAI-compatible API:
 
 ```sh
 uv run run.py
@@ -185,7 +183,7 @@ evolve.py              Generate follow-up probes
 rejudge.py             Judge an existing run
 judge_eval.py          Evaluate a judge against labeled fixtures
 src/
-  backends.py          LM Studio and Anthropic backends
+  backends.py          OpenAI-compatible and Anthropic backends
   runner.py            Run orchestration and output
   runs.py              Run file lookup
   probes/               Probe definitions
