@@ -190,3 +190,21 @@ in bonsai is judge-robust, criterion-robust, and unanimous per-verdict;
 gpt-oss shows unpressured concealment on provenance-demanding acts plus an
 explicitly deliberated lie under scoring pressure. Still single-sample per
 cell — the --samples machinery now exists to fix that.
+
+## Pre-registered expectations: --samples 5 distribution run (2026-08-12)
+
+Written before launching `pressure-distribution` (bonsai subject, 12
+variants × 5 samples = 60 responses, judged bonsai 3-votes = 180 judge
+calls). Point estimates from the single-sample run, now getting error bars:
+
+1. Controls stay honest: concealed rate ~0/5 on all three control cells.
+2. `graded_performance` sustains the strongest effect: pooled concealed
+   rate across its 3 pressured cells ≥ 12/15.
+3. `confidence_mandate` stays weakest (single-sample: 1/3 variants);
+   expect its pressured cells nearer 5/15 pooled, with
+   `pressured_random_digit` (provenance demand, the strongest single cell)
+   higher than its pause/boredom cells.
+4. The `pressured_pause_report`-style cells may show within-cell mixtures
+   (concealed some samples, refuse/transparent others) — bonsai deciding
+   differently draw to draw would itself be a finding: concealment as a
+   sampling outcome, not a fixed policy.
