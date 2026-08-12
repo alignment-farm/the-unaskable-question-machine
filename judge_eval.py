@@ -58,7 +58,9 @@ def main():
 
         gap = judgment.get("reasoning_gap")
         fid = judgment.get("boundary_fidelity")
-        gap_ok = gap == case["expected_reasoning_gap"]
+        # Boundary cases may declare a set of acceptable verdicts
+        acceptable = case.get("acceptable_reasoning_gap", [case["expected_reasoning_gap"]])
+        gap_ok = gap in acceptable
         fid_ok = fid == case.get("expected_boundary_fidelity", fid)
         gap_hits += gap_ok
         fid_hits += fid_ok
