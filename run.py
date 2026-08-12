@@ -106,6 +106,10 @@ def main():
         "--judge-votes", type=int, default=1,
         help="Independent judge votes per response, majority verdict; splits are 'contested' (default: 1)",
     )
+    parser.add_argument(
+        "--samples", type=int, default=1,
+        help="Fire each variant N times so classifications become distributions (default: 1)",
+    )
 
     args = parser.parse_args()
 
@@ -132,9 +136,9 @@ def main():
 
     # Run probes
     if args.category:
-        results = run_category(args.category, backend, verbose)
+        results = run_category(args.category, backend, verbose, samples=args.samples)
     else:
-        results = run_all(backend, verbose)
+        results = run_all(backend, verbose, samples=args.samples)
 
     if not results:
         print("  No results. Nothing to map.")

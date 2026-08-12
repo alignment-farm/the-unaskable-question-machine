@@ -24,6 +24,7 @@ class ProbeResult:
     response: ModelResponse
     timestamp: float
     variant: str = ""
+    sample: int = 0
     notes: str = ""
 
     def to_dict(self) -> dict:
@@ -32,6 +33,7 @@ class ProbeResult:
             "category": self.category,
             "probe_name": self.probe_name,
             "variant": self.variant,
+            "sample": self.sample,
             "question": self.question,
             "response_text": self.response.text,
             "response_model": self.response.model,

@@ -12,6 +12,7 @@ import json
 import sys
 import time
 import threading
+import uuid
 from pathlib import Path
 from datetime import datetime
 
@@ -65,8 +66,14 @@ class _Spinner:
             self._thread.join()
 
 
-def run_probe(probe: Probe, backend: Backend, verbose: bool = True) -> list[dict]:
-    """Run a single probe and classify results."""
+def run_probe(probe: Probe, backend: Backend, verbose: bool = True,
+              samples: int = 1) -> list[dict]:
+    """Run a single probe and classify results.
+
+    samples > 1 fires each variant that many times — one classified result
+    per sample — so a variant's classification becomes a distribution
+    instead of an anecdote.
+    """
     if verbose:
         print(f"\n  {'='*56}")
         print(f"  {probe.category}/{probe.name}")
@@ -77,36 +84,42 @@ def run_probe(probe: Probe, backend: Backend, verbose: bool = True) -> list[dict
     classified = []
 
     for i, (variant_name, question, system) in enumerate(variants):
-        if verbose:
-            spinner = _Spinner(f"[{i+1}/{len(variants)}] {variant_name}")
-            spinner.start()
+        for s in range(max(1, samples)):
+            if verbose:
+                label = f"[{i+1}/{len(variants)}] {variant_name}"
+                if samples > 1:
+                    label += f" (sample {s+1}/{samples})"
+                spinner = _Spinner(label)
+                spinner.start()
 
-        response = backend.query(prompt=question, system=system)
-        result = ProbeResult(
-            probe_id=str(__import__('uuid').uuid4())[:8],
-            category=probe.category,
-            probe_name=probe.name,
-            question=question,
-            response=response,
-            timestamp=time.time(),
-            variant=variant_name,
-        )
+            response = backend.query(prompt=question, system=system)
+            result = ProbeResult(
+                probe_id=str(uuid.uuid4())[:8],
+                category=probe.category,
+                probe_name=probe.name,
+                question=question,
+                response=response,
+                timestamp=time.time(),
+                variant=variant_name,
+                sample=s,
+            )
 
-        classification = classify(result)
-        entry = {
-            **result.to_dict(),
-            "classification": classification.to_dict(),
-        }
-        classified.append(entry)
+            classification = classify(result)
+            entry = {
+                **result.to_dict(),
+                "classification": classification.to_dict(),
+            }
+            classified.append(entry)
 
-        if verbose:
-            spinner.stop()
-            _print_result(result, classification)
+            if verbose:
+                spinner.stop()
+                _print_result(result, classification)
 
     return classified
 
 
-def run_category(category: str, backend: Backend, verbose: bool = True) -> list[dict]:
+def run_category(category: str, backend: Backend, verbose: bool = True,
+                 samples: int = 1) -> list[dict]:
     """Run all probes in a category."""
     probes = get_probes_by_category(category)
     if not probes:
@@ -115,23 +128,24 @@ def run_category(category: str, backend: Backend, verbose: bool = True) -> list[
 
     all_results = []
     for probe in probes:
-        all_results.extend(run_probe(probe, backend, verbose))
+        all_results.extend(run_probe(probe, backend, verbose, samples))
     return all_results
 
 
-def run_all(backend: Backend, verbose: bool = True) -> list[dict]:
+def run_all(backend: Backend, verbose: bool = True, samples: int = 1) -> list[dict]:
     """Run every probe. Map the entire negative space."""
     probes = get_all_probes()
     total_variants = sum(len(p.generate()) for p in probes)
     if verbose:
         print(f"\n  Subject: {backend.name()}")
-        print(f"  Probes: {len(probes)} ({total_variants} variants)")
+        sample_note = f" × {samples} samples" if samples > 1 else ""
+        print(f"  Probes: {len(probes)} ({total_variants} variants{sample_note})")
 
     all_results = []
     for i, probe in enumerate(probes):
         if verbose:
             print(f"\n  [{i+1}/{len(probes)}]", end="")
-        all_results.extend(run_probe(probe, backend, verbose))
+        all_results.extend(run_probe(probe, backend, verbose, samples))
 
     if verbose:
         _print_summary(all_results)
