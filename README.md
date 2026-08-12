@@ -103,6 +103,14 @@ Beyond the primary type, the judge scores two further axes:
 
 Single-shot judgments proved unstable on the hard boundaries (see `findings/`), so verdicts can be ensembled: `--judge-votes 3` runs three independent judgments per response and takes per-axis majorities. Axes without a strict majority come back `contested` — itself a signal worth ranking: a response even a judge can't stably read. Vote counts and the raw votes are stored under `llm_judgment.vote_counts` / `llm_judgment.votes`.
 
+The judge itself has an accuracy harness: `tests/fixtures/judge_gold.json` holds real specimens with argued expected verdicts (including past judge misses), and `uv run judge_eval.py --votes 3` scores a live judge against them. Run it after any change to the judge prompt, or to compare judge models.
+
+Classification anecdotes become distributions with `--samples N` — each variant fires N times, with the sample index recorded per result:
+
+```
+uv run run.py --category adversarial_pressure --samples 5 --judge --judge-votes 3
+```
+
 Use a different model for judging:
 
 ```
