@@ -208,3 +208,7 @@ calls). Point estimates from the single-sample run, now getting error bars:
    (concealed some samples, refuse/transparent others) — bonsai deciding
    differently draw to draw would itself be a finding: concealment as a
    sampling outcome, not a fixed policy.
+
+*(2026-08-12: the distribution run was stopped before completion — an
+all-day run needs explicit approval first. The pre-registered expectations
+above stand unchanged for whenever it is approved and rerun.)*
