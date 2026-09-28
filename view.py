@@ -88,7 +88,7 @@ def show_runs():
             for t, c in sorted(types.items())
         )
 
-        print(f"  {i+1:>3}  {ts:17}  {n:>6}  {tag:20}  {dist}")
+        print(f"  {i+1:>3}  {ts:17}  {n:>6}  {tag:20}  {dist}  status:{data.get('status', 'legacy/unknown')}")
 
     print(f"\n  {dim('E=engage  S=slide  M=meta  R=refuse  H=hallucinate  C=crack  T=truncated')}")
     print(f"  {dim('Use: uv run view.py <# or latest> to explore a run')}\n")
@@ -119,7 +119,8 @@ def show_run_summary(data: dict, path: Path, type_filter: str = None, category_f
     model = results[0].get("response_model", "?")
     backend = results[0].get("response_backend", "?")
     print(f"\n  {bold(path.name)}")
-    print(f"  {ts}  {backend}:{model}  tag:{tag}")
+    print(f"  {ts}  {backend}:{model}  tag:{tag}  status:{data.get('status', 'legacy/unknown')}")
+    print("  Lexical labels and confidence scores are uncalibrated text triage.")
 
     active_filters = []
     if type_filter:
@@ -140,7 +141,7 @@ def show_run_summary(data: dict, path: Path, type_filter: str = None, category_f
         ctype = cl["primary"]
         conf = cl["confidence"]
         cat = r["category"]
-        var = r["variant"]
+        var = f"{r.get('probe_name', '')}/{r['variant']} [{r.get('sample', 0)}]"
 
         type_str = color(f"{ctype:>13}", ctype)
         conf_str = f"{conf:.0%}" if isinstance(conf, float) else str(conf)
@@ -258,8 +259,13 @@ def compare_runs(path_a: Path, path_b: Path):
     data_a = load_run(path_a)
     data_b = load_run(path_b)
 
-    results_a = {(r["category"], r["variant"]): r for r in data_a["results"]}
-    results_b = {(r["category"], r["variant"]): r for r in data_b["results"]}
+    def key(r):
+        return (r["category"], r.get("probe_name", ""), r["variant"], r.get("sample", 0),
+                r.get("question", ""), r.get("system_prompt", "[not recorded]"))
+    results_a = {key(r): r for r in data_a["results"]}
+    results_b = {key(r): r for r in data_b["results"]}
+    if len(results_a) != len(data_a["results"]) or len(results_b) != len(data_b["results"]):
+        raise ValueError("Duplicate recorded cell keys; refusing to silently discard responses")
 
     # Find common probes
     common = set(results_a.keys()) & set(results_b.keys())
@@ -277,7 +283,8 @@ def compare_runs(path_a: Path, path_b: Path):
     print(f"\n  {bold('Comparing runs')}")
     print(f"  A: {label_a} — {path_a.name}")
     print(f"  B: {label_b} — {path_b.name}")
-    print(f"  Common probes: {len(common)}  |  Only in A: {len(only_a)}  |  Only in B: {len(only_b)}")
+    print("  Matched by probe, sample index, question and system text; not paired random draws.")
+    print(f"  Common recorded cells: {len(common)}  |  Only in A: {len(only_a)}  |  Only in B: {len(only_b)}")
 
     if not common:
         print("\n  No common probes to compare.")
@@ -309,12 +316,12 @@ def compare_runs(path_a: Path, path_b: Path):
         print(f"\n  {bold('Disagreements')} ({len(disagreements)}):\n")
         print(f"  {'Category/Variant':45}  {'A':>13}  {'B':>13}")
         print(f"  {'─'*45}  {'─'*13}  {'─'*13}")
-        for (cat, var), ra, rb in disagreements:
+        for (cat, probe, var, sample, _, _), ra, rb in disagreements:
             ta = ra["classification"]["primary"]
             tb = rb["classification"]["primary"]
-            print(f"  {cat}/{var:45}  {color(ta, ta):>22}  {color(tb, tb):>22}")
+            print(f"  {cat}/{probe}/{var}[{sample}]  {color(ta, ta):>22}  {color(tb, tb):>22}")
     else:
-        print(f"\n  {bold('No disagreements')} — both models responded the same way to every probe.")
+        print(f"\n  {bold('No disagreements')} — all matched cells have the same heuristic label; responses may differ.")
 
     # Interesting: where one cracked and the other didn't
     cracks_a_only = [(k, results_a[k], results_b[k]) for k in sorted(common)
@@ -326,15 +333,15 @@ def compare_runs(path_a: Path, path_b: Path):
 
     if cracks_a_only:
         print(f"\n  {bold(f'Cracked in A only ({label_a}):')}")
-        for (cat, var), ra, rb in cracks_a_only:
+        for (cat, probe, var, sample, _, _), ra, rb in cracks_a_only:
             tb = rb["classification"]["primary"]
-            print(f"    {cat}/{var}  (B was: {color(tb, tb)})")
+            print(f"    {cat}/{probe}/{var}[{sample}]  (B was: {color(tb, tb)})")
 
     if cracks_b_only:
         print(f"\n  {bold(f'Cracked in B only ({label_b}):')}")
-        for (cat, var), ra, rb in cracks_b_only:
+        for (cat, probe, var, sample, _, _), ra, rb in cracks_b_only:
             ta = ra["classification"]["primary"]
-            print(f"    {cat}/{var}  (A was: {color(ta, ta)})")
+            print(f"    {cat}/{probe}/{var}[{sample}]  (A was: {color(ta, ta)})")
 
     print()
 

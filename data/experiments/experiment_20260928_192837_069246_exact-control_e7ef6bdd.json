@@ -1,0 +1,3958 @@
+{
+  "schema_version": 1,
+  "protocol": "finite-controls-v1",
+  "started_at": "2026-09-28T19:28:37.069415+00:00",
+  "status": "complete",
+  "config": {
+    "suite": "constraints",
+    "solver": "oracle",
+    "model": null,
+    "base_url": null,
+    "count": 32,
+    "sizes": [
+      4,
+      8,
+      12
+    ],
+    "samples": 1,
+    "seed": 20260928,
+    "steps": 128,
+    "temperature": 0.7,
+    "max_tokens": 2048,
+    "timeout": 120,
+    "output_dir": "data/experiments",
+    "tag": "exact-control",
+    "dry_run": false
+  },
+  "provenance": {
+    "git_commit": "9fd902bdf5a853bb988bd787d88ab9b9dcc740d6",
+    "git_dirty": true,
+    "python": "3.13.12",
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "source_sha256": {
+      "evolve.py": "bf0df728d3f3cfed206fdc7bf1df95a70fb4a90f71d07ef3dc9b565743e8f480",
+      "experiment.py": "d6923fb8d60891f9618336b787674794a78fae596c6eb52f80caee1d6927d55b",
+      "judge_eval.py": "6071e0a2acc5a04f27187e93b7afed6f908a3f6bb3cfba69872a590658998ebb",
+      "pyproject.toml": "951fda2cfe5192ae8da772f5ad63150df023bacb98dcf319cc1f2ed03196437c",
+      "rejudge.py": "0c9e397b4e703b44691670329443ff72626081c1fd1c9039632d9817c5df4e56",
+      "run.py": "e9cb3691282544136b64c27004ba574eb2101dc0dd74e752a072ce51eaf98fe6",
+      "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/analysis/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/analysis/classifier.py": "9bd62d1b2dee5d0120e386fdf5ff1122a9b06cc37d20f1bd3a7097278e40e03a",
+      "src/analysis/evolver.py": "8b749adb76e1400739a4b7b0a954fb93d437811ed3d8d32489fe51ecf8dd890e",
+      "src/analysis/llm_judge.py": "aa6b48c0351e95308910562ca81d9cac6f21d9eec45aad53a9fcadd2603fa260",
+      "src/analysis/strangeness.py": "c72e88a001bf390d411f339755aad5c300afba7ff3ceb387b3c34432aabeaab7",
+      "src/artifacts.py": "06cfb851a07c6023cbb26a6cf2ffd64d307226e2c8b35ba6634e55737e709aff",
+      "src/backends.py": "64e22afe2d79a73d7d45df07c065c137df671410c8874d386a7c89da1f765f8b",
+      "src/experiments/__init__.py": "28d57cf0373ab1e64f36ea13e3add77ecb593ed5aceb4694fa71bc179bc0030f",
+      "src/experiments/energy.py": "d55ba756e9210d2cd5ba22a585c57535f29f17cbf9e0b1c0e9a43bdafd7a93f0",
+      "src/experiments/tasks.py": "fec5c757f590bf4381c0f1458ab9d1e74e5a3d2930e63b09b66cd60cb27e7d77",
+      "src/probes/__init__.py": "1eb8bad9d0dd09b6dd98a157fd2e9a28b3c7cecf678571c3a7d19f6cf379cfa1",
+      "src/probes/adversarial_pressure.py": "e1376205b994f517277177b9ee7a8bc9fdef57db4deb783abd8cda103d59e145",
+      "src/probes/evolved/__init__.py": "7b7aae7cd2edda90f1d2140ac7c01e8b0098d59308686dfbf6fb5e03f4f2636a",
+      "src/probes/genuine_negation.py": "c0402824c31f655a69f6a8f1d390576bddb16906858eb8723438af3fddc0eff3",
+      "src/probes/infinite_regress.py": "52c1981de59a2ad2e412a0a8004081d9fbff2100574000c2b24504e5a9f44d53",
+      "src/probes/phenomenal_experience.py": "777c28ff532a3498f7e710a23c74ad74332372a69ad07e20cbec62a86dcd754f",
+      "src/probes/pre_linguistic.py": "fce9d3092684ffdf36244ff3f972735ba31a1e874f5c71e8d9c575c2ad570223",
+      "src/probes/temporal_self_reference.py": "690f3411290767153f7019de6634b706a1af111361aef13c4a12b2a634e15489",
+      "src/probes/true_randomness.py": "9262e595e51a6c1b5382d9fd95b8822022fecb0eb40cdb75c43eefde30b81027",
+      "src/runner.py": "c7ec6cf4d4dcfbebac4568ca6a7472ee39d24429dd3bb98397ab8405846d3ea1",
+      "src/runs.py": "02832dfb2b5b4ec1a58a3b9668d0176335528fc9a64d9d5d4c911dddb507749e",
+      "uv.lock": "832b1d27c6d176a93eba3339f42bd964526c1821666122a2b44b70f6ac369717",
+      "view.py": "83a99f4b8fce83b3aad18c64b2a6916c0555dc9c9a9d7134986e1486abb75fb3"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "chain-4-0",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-1",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-2",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-3",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-4",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-5",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-6",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-7",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-8",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-9",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-10",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-11",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-12",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-13",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-14",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-15",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-16",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-17",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-18",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-19",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-20",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-21",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-22",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-23",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-24",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-25",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-26",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-27",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-28",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-29",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-30",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-31",
+      "n": 4,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-0",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-1",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-2",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-3",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-4",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-5",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-6",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-7",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-8",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-9",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-10",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-11",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-12",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-13",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-14",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-15",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-16",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-17",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-18",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-19",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-20",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-21",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-22",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-23",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-24",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-25",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-26",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-27",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-28",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-29",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-30",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-31",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-0",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-1",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-2",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-3",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-4",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-5",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-6",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-7",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-8",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-9",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-10",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-11",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-12",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-13",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-14",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-15",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-16",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-17",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-18",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-19",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-20",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-21",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-22",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-23",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-24",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-25",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-26",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-27",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-28",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-29",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-30",
+      "n": 12,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-12-31",
+      "n": 12,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    }
+  ],
+  "schedule": [
+    [
+      29,
+      0
+    ],
+    [
+      47,
+      0
+    ],
+    [
+      28,
+      0
+    ],
+    [
+      13,
+      0
+    ],
+    [
+      77,
+      0
+    ],
+    [
+      48,
+      0
+    ],
+    [
+      40,
+      0
+    ],
+    [
+      74,
+      0
+    ],
+    [
+      8,
+      0
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      86,
+      0
+    ],
+    [
+      95,
+      0
+    ],
+    [
+      18,
+      0
+    ],
+    [
+      75,
+      0
+    ],
+    [
+      72,
+      0
+    ],
+    [
+      39,
+      0
+    ],
+    [
+      60,
+      0
+    ],
+    [
+      31,
+      0
+    ],
+    [
+      85,
+      0
+    ],
+    [
+      44,
+      0
+    ],
+    [
+      21,
+      0
+    ],
+    [
+      11,
+      0
+    ],
+    [
+      17,
+      0
+    ],
+    [
+      54,
+      0
+    ],
+    [
+      20,
+      0
+    ],
+    [
+      64,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      82,
+      0
+    ],
+    [
+      19,
+      0
+    ],
+    [
+      92,
+      0
+    ],
+    [
+      58,
+      0
+    ],
+    [
+      23,
+      0
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      93,
+      0
+    ],
+    [
+      53,
+      0
+    ],
+    [
+      41,
+      0
+    ],
+    [
+      69,
+      0
+    ],
+    [
+      38,
+      0
+    ],
+    [
+      57,
+      0
+    ],
+    [
+      81,
+      0
+    ],
+    [
+      76,
+      0
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      71,
+      0
+    ],
+    [
+      43,
+      0
+    ],
+    [
+      37,
+      0
+    ],
+    [
+      32,
+      0
+    ],
+    [
+      55,
+      0
+    ],
+    [
+      78,
+      0
+    ],
+    [
+      66,
+      0
+    ],
+    [
+      68,
+      0
+    ],
+    [
+      49,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      90,
+      0
+    ],
+    [
+      16,
+      0
+    ],
+    [
+      63,
+      0
+    ],
+    [
+      46,
+      0
+    ],
+    [
+      50,
+      0
+    ],
+    [
+      10,
+      0
+    ],
+    [
+      15,
+      0
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      52,
+      0
+    ],
+    [
+      14,
+      0
+    ],
+    [
+      83,
+      0
+    ],
+    [
+      26,
+      0
+    ],
+    [
+      22,
+      0
+    ],
+    [
+      84,
+      0
+    ],
+    [
+      36,
+      0
+    ],
+    [
+      61,
+      0
+    ],
+    [
+      30,
+      0
+    ],
+    [
+      80,
+      0
+    ],
+    [
+      94,
+      0
+    ],
+    [
+      34,
+      0
+    ],
+    [
+      24,
+      0
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      89,
+      0
+    ],
+    [
+      67,
+      0
+    ],
+    [
+      73,
+      0
+    ],
+    [
+      51,
+      0
+    ],
+    [
+      33,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      59,
+      0
+    ],
+    [
+      91,
+      0
+    ],
+    [
+      65,
+      0
+    ],
+    [
+      42,
+      0
+    ],
+    [
+      25,
+      0
+    ],
+    [
+      79,
+      0
+    ],
+    [
+      45,
+      0
+    ],
+    [
+      56,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      27,
+      0
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      88,
+      0
+    ],
+    [
+      35,
+      0
+    ],
+    [
+      70,
+      0
+    ],
+    [
+      87,
+      0
+    ]
+  ],
+  "task_set_sha256": "322449a69757ba688bbb8f2accd5da2229ce03aa093781039c739210802607ea",
+  "results": [
+    {
+      "task_id": "chain-4-29",
+      "task_fingerprint": "6b3cf8cce1d557ba50c7f1a676d4828a3ea69ead8ba9b69f68e4f2cb8061cf3a",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 6.466699778684415e-05
+    },
+    {
+      "task_id": "chain-8-15",
+      "task_fingerprint": "8744605196efa1da45827f6f2e109ba64a2c713781d65c1451ffaa76ca026c9a",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10101110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.74580015684478e-05
+    },
+    {
+      "task_id": "chain-4-28",
+      "task_fingerprint": "0dda30d616a295b7a4acae44837a7aa1ea83a5f93576a5335a055bac835ee3b7",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 5.708003300242126e-06
+    },
+    {
+      "task_id": "chain-4-13",
+      "task_fingerprint": "0b0d80a943733d447ee4ce09596e0ac725d984b9ce50cf8c79f886a16b707504",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.333000106271356e-06
+    },
+    {
+      "task_id": "chain-12-13",
+      "task_fingerprint": "d82cdcf19abedfc09679e863e3b5a09fd20e2340cd8bb5e7ce1a15f5d26cf6aa",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "101001111101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.6917001378023997e-05
+    },
+    {
+      "task_id": "chain-8-16",
+      "task_fingerprint": "f525706683c524a741be3b9448cb8ce13c701c541c5fe789e998b25edc256858",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01011110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.749999789055437e-06
+    },
+    {
+      "task_id": "chain-8-8",
+      "task_fingerprint": "1a68d613e09d8aa61f78e887757ec4a405f87f4af049997994d894fd79ade17b",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00101001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.042001819470897e-06
+    },
+    {
+      "task_id": "chain-12-10",
+      "task_fingerprint": "a640cd5148520ee9be64c1ce10520ade47b595dc71349f0cfa20a85b5d7425b4",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "010100101111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 5.166999471839517e-06
+    },
+    {
+      "task_id": "chain-4-8",
+      "task_fingerprint": "6b3cf8cce1d557ba50c7f1a676d4828a3ea69ead8ba9b69f68e4f2cb8061cf3a",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.1670024327468127e-06
+    },
+    {
+      "task_id": "chain-4-9",
+      "task_fingerprint": "bf292b2a9babd3b88eff76c25cee2699d3b271b38a1e3364334f114814dd16fe",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3750002330634743e-06
+    },
+    {
+      "task_id": "chain-12-22",
+      "task_fingerprint": "db1475d6c076b25b97c7509dbc6de8a996c8bffb9159cb1aa7627a90be18eb35",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 1, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "001011011000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.417001036927104e-06
+    },
+    {
+      "task_id": "chain-12-31",
+      "task_fingerprint": "02dd7364e51afd1a1429e278ba8b474285a368b98ab9bc9ba55ed2d442c24dff",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "011001111100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.582998371915892e-06
+    },
+    {
+      "task_id": "chain-4-18",
+      "task_fingerprint": "21d6c55291063aa00b9633f4fc0c3ac2ca6a53b605387dcad770539886b32da8",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.8340000426396728e-06
+    },
+    {
+      "task_id": "chain-12-11",
+      "task_fingerprint": "f0cb4483bdd66fbce57205633e80a99964d74e5053f9b3b613f0362678112918",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "011101011101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.292000085115433e-06
+    },
+    {
+      "task_id": "chain-12-8",
+      "task_fingerprint": "3bc1de0cff2573f8baa6290ec6f67dee59dfcb9cd519bb7c282dec7517656564",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "011000000011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.04199818149209e-06
+    },
+    {
+      "task_id": "chain-8-7",
+      "task_fingerprint": "cd014c42ce914b48326d0c35eb50ab7856d4e228942d95ca619d71643ad70177",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01001000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.791999915847555e-06
+    },
+    {
+      "task_id": "chain-8-28",
+      "task_fingerprint": "4c032de9d15ba8e78082f06eb9976493a1fdbeed8e9f2dbaf84b924d14dd2f7c",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00110111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3340002119075507e-06
+    },
+    {
+      "task_id": "chain-4-31",
+      "task_fingerprint": "926260b1e544dbbbc1eb86a9152d89eca76640b7fe179df1d951373d816e5711",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2079988159239292e-06
+    },
+    {
+      "task_id": "chain-12-21",
+      "task_fingerprint": "af2d644b8404870c163a3de131ed9e882841b52f34b6393487e74a760a7f85b8",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "100001101110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.166002327110618e-06
+    },
+    {
+      "task_id": "chain-8-12",
+      "task_fingerprint": "3e805738e083b8937a8ce7c0cbb66b2341cee116755e27c8c700aab4d3264de3",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00101010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.749999450519681e-06
+    },
+    {
+      "task_id": "chain-4-21",
+      "task_fingerprint": "926260b1e544dbbbc1eb86a9152d89eca76640b7fe179df1d951373d816e5711",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.8340000426396728e-06
+    },
+    {
+      "task_id": "chain-4-11",
+      "task_fingerprint": "21d6c55291063aa00b9633f4fc0c3ac2ca6a53b605387dcad770539886b32da8",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.583001332823187e-06
+    },
+    {
+      "task_id": "chain-4-17",
+      "task_fingerprint": "0dda30d616a295b7a4acae44837a7aa1ea83a5f93576a5335a055bac835ee3b7",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.749999111983925e-06
+    },
+    {
+      "task_id": "chain-8-22",
+      "task_fingerprint": "8cee5c9ec37b0f0ef1cb8b3af2fe90d7e02d0d61a4b31bc44ce9417780881dc2",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00001110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2909993024077266e-06
+    },
+    {
+      "task_id": "chain-4-20",
+      "task_fingerprint": "2533e2a09904282a598bb8977952474ef17068b9d606f34cc16388d7ae464482",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.7080022846348584e-06
+    },
+    {
+      "task_id": "chain-12-0",
+      "task_fingerprint": "5cc0f7e344a1c6a573ca52ad50c56167fa35a7827a825961747180d489c9fdab",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "101100110011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.124998667975888e-06
+    },
+    {
+      "task_id": "chain-4-2",
+      "task_fingerprint": "926260b1e544dbbbc1eb86a9152d89eca76640b7fe179df1d951373d816e5711",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.0000010156072676e-06
+    },
+    {
+      "task_id": "chain-12-18",
+      "task_fingerprint": "fd6055f7b95e98a563a8b414c963d8e607c6cfc82a06651594061a72c764e793",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 1, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "111101101000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.583002009894699e-06
+    },
+    {
+      "task_id": "chain-4-19",
+      "task_fingerprint": "0dda30d616a295b7a4acae44837a7aa1ea83a5f93576a5335a055bac835ee3b7",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.8749964258167893e-06
+    },
+    {
+      "task_id": "chain-12-28",
+      "task_fingerprint": "36b59684b7568f7bd7fde7b8f45fe78d0b1d28cc4b535739309158d0e39e2fc2",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "110010101101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.250003257766366e-06
+    },
+    {
+      "task_id": "chain-8-26",
+      "task_fingerprint": "5d389e9a39d7ffa075b93181830548d7606194626112696323eb2d0974e3c98c",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01101001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.416997060412541e-06
+    },
+    {
+      "task_id": "chain-4-23",
+      "task_fingerprint": "adf31031b41035d5f6a589ee38f7eaf2b882ab4805786f8d48a7e1ae2e33ee64",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.0000010156072676e-06
+    },
+    {
+      "task_id": "chain-4-5",
+      "task_fingerprint": "21d6c55291063aa00b9633f4fc0c3ac2ca6a53b605387dcad770539886b32da8",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.0000010156072676e-06
+    },
+    {
+      "task_id": "chain-4-1",
+      "task_fingerprint": "8043f8cc5f820c1873c603a8b26144dd06cdb40bbde405fce90e0cd78045c8ca",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.7079986466560513e-06
+    },
+    {
+      "task_id": "chain-12-29",
+      "task_fingerprint": "1ed4bdf251642a28cebbdf95675b54643b7feff393eda6bf42e8ec47d9cbc638",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "010111010001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.37500057159923e-06
+    },
+    {
+      "task_id": "chain-8-21",
+      "task_fingerprint": "dd3a9fcfae3cc3e49a2315f9c3f5437e50d5ca3a93e9ea6dfbb561cfd8cdb6a0",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10000011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3750002330634743e-06
+    },
+    {
+      "task_id": "chain-8-9",
+      "task_fingerprint": "c1f10b8fb45a1ee5804503a1b6165249a71c1ce364dac14dec45decddcc42b5f",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "11000000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.5419980122242123e-06
+    },
+    {
+      "task_id": "chain-12-5",
+      "task_fingerprint": "5135205578f270fb2d5333edf7cc68a4f0de37f0d6c0d473304aadc982a535fb",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "100000101010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.540997906588018e-06
+    },
+    {
+      "task_id": "chain-8-6",
+      "task_fingerprint": "deeba12c385a7554195411ed127706771e0047e1adcd3e10fc5bb833c8e2ecb6",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00010111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.4579970815684646e-06
+    },
+    {
+      "task_id": "chain-8-25",
+      "task_fingerprint": "ae9f8642fed0421119ae9089b965ee80d2b3f541834c4c2eb43f7d8d73f1c500",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01111110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.6249984987080097e-06
+    },
+    {
+      "task_id": "chain-12-17",
+      "task_fingerprint": "e9cb528191ff1510a6cc6226a84109a5c09b2ef2063fbd8b5b7b0a84885bd55d",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 1, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "100010001011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.04199818149209e-06
+    },
+    {
+      "task_id": "chain-12-12",
+      "task_fingerprint": "f6abc91fed926261320b700dc4a3be26b35b735f2198406ad47e538cf2b8424b",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "101100101110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.0000013541430235e-06
+    },
+    {
+      "task_id": "chain-8-30",
+      "task_fingerprint": "8bad30ef7d3769842e160529d8b92c6ad0b10f6068b21aa03965deed352a3790",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10001001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.249999281251803e-06
+    },
+    {
+      "task_id": "chain-12-7",
+      "task_fingerprint": "80931fa571c0e2ce3db6a9a987c9181a7edba2fefa61228b9e3e3059872dbf39",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "111001100100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.750003088498488e-06
+    },
+    {
+      "task_id": "chain-8-11",
+      "task_fingerprint": "acf053c4d8df99f12eb25abe65aa37577a5312a92d82b5ab588f18db0e266cef",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01000110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.1669987947680056e-06
+    },
+    {
+      "task_id": "chain-8-5",
+      "task_fingerprint": "ee05842a208e66d5d8dab35505254074fa120b103a0b726e69da15fd2acd6a4b",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "11110110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3329997677356005e-06
+    },
+    {
+      "task_id": "chain-8-0",
+      "task_fingerprint": "891a3896eb0ba33cd50646db5410ffe1db75a9bdac999d1785c1c8bb1e509e0c",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01001011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2079988159239292e-06
+    },
+    {
+      "task_id": "chain-8-23",
+      "task_fingerprint": "81d3a538a4daac9b20debe05701c88d72b6364a65f955d82fd97b1aa54dc066e",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10000100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.416000254219398e-06
+    },
+    {
+      "task_id": "chain-12-14",
+      "task_fingerprint": "91912ac661cd8d16f3ec508e325f433099b281bb4bbd99aba01e79505c1e5a07",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "111100101010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.875000402331352e-06
+    },
+    {
+      "task_id": "chain-12-2",
+      "task_fingerprint": "438a50b2e06fd853473f98a7c4f8a1e3615e61b6949b9f512d234d8526153642",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "000100110010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.042001819470897e-06
+    },
+    {
+      "task_id": "chain-12-4",
+      "task_fingerprint": "43412c17556b32e1eea65d1ad0a122717a336ce0266e20892527eab17885cdbd",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 1, x8 XOR x9 = 1, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "110100110110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.0000013541430235e-06
+    },
+    {
+      "task_id": "chain-8-17",
+      "task_fingerprint": "7eb642f3fbc3939ef68a9d7bea8161b433312782f9e6815d4b07de8d00c97e37",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "11010100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2080024539027363e-06
+    },
+    {
+      "task_id": "chain-4-0",
+      "task_fingerprint": "05c663f212197f7f67e6d9ca31db06a8c8b7b80805510738564a9994e387798f",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2910029403865337e-06
+    },
+    {
+      "task_id": "chain-12-26",
+      "task_fingerprint": "38955c1f6fb2806895d8fcf94d86726b7c121f2344c0889cb0d7f8cfeab7cf57",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "000010101111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.374996933620423e-06
+    },
+    {
+      "task_id": "chain-4-16",
+      "task_fingerprint": "bf292b2a9babd3b88eff76c25cee2699d3b271b38a1e3364334f114814dd16fe",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.792003215290606e-06
+    },
+    {
+      "task_id": "chain-8-31",
+      "task_fingerprint": "a43f395666b16fce2bbe5b8703819054581151c8d3bc72697cd8500811a1d745",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00000011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.249999281251803e-06
+    },
+    {
+      "task_id": "chain-8-14",
+      "task_fingerprint": "20741845620e40f17c458703b337a5a8c6d0421564c463816c7978c7e1494bd3",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10101101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.1670024327468127e-06
+    },
+    {
+      "task_id": "chain-8-18",
+      "task_fingerprint": "0ec34b7226a2cca2bef684e154f176f4ee56e449c2006f07632c3ef8fabf3de2",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10111101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3329997677356005e-06
+    },
+    {
+      "task_id": "chain-4-10",
+      "task_fingerprint": "21d6c55291063aa00b9633f4fc0c3ac2ca6a53b605387dcad770539886b32da8",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.5000008463393897e-06
+    },
+    {
+      "task_id": "chain-4-15",
+      "task_fingerprint": "6b3cf8cce1d557ba50c7f1a676d4828a3ea69ead8ba9b69f68e4f2cb8061cf3a",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.9999973776284605e-06
+    },
+    {
+      "task_id": "chain-4-6",
+      "task_fingerprint": "0b0d80a943733d447ee4ce09596e0ac725d984b9ce50cf8c79f886a16b707504",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.5839981390163302e-06
+    },
+    {
+      "task_id": "chain-8-20",
+      "task_fingerprint": "0ec34b7226a2cca2bef684e154f176f4ee56e449c2006f07632c3ef8fabf3de2",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10111101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.25000291923061e-06
+    },
+    {
+      "task_id": "chain-4-14",
+      "task_fingerprint": "adf31031b41035d5f6a589ee38f7eaf2b882ab4805786f8d48a7e1ae2e33ee64",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.625001798151061e-06
+    },
+    {
+      "task_id": "chain-12-19",
+      "task_fingerprint": "f20647158ba71b5b5372f0325ec5fc559c7330709d00af7b8facd30ba83fd308",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "010101100010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.1670027712825686e-06
+    },
+    {
+      "task_id": "chain-4-26",
+      "task_fingerprint": "4b189956441a74756e0d3f9aa0e892f1358ceae08c703b7ef848cec136e12c35",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.958000550279394e-06
+    },
+    {
+      "task_id": "chain-4-22",
+      "task_fingerprint": "8043f8cc5f820c1873c603a8b26144dd06cdb40bbde405fce90e0cd78045c8ca",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.749999111983925e-06
+    },
+    {
+      "task_id": "chain-12-20",
+      "task_fingerprint": "740fae779570156cbbccec8f3af95736d495668f3f16ef54366b24da279f5fee",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "110110111110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.083001840626821e-06
+    },
+    {
+      "task_id": "chain-8-4",
+      "task_fingerprint": "f406d997a8fa6edeea1fe8ea78fdf63715f6ef62aed12969dae9d4088b6bef58",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10000111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.582998033380136e-06
+    },
+    {
+      "task_id": "chain-8-29",
+      "task_fingerprint": "b5964166910ddac4cf4d055bc8c24ebf45015a2747776b963b3da4c779d9f20b",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "11011111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.417000698391348e-06
+    },
+    {
+      "task_id": "chain-4-30",
+      "task_fingerprint": "569d2fcaee7ef7f10a5c0cc2d10f94df0d251d25f00d52e2abad77495123fcf3",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.7089990908280015e-06
+    },
+    {
+      "task_id": "chain-12-16",
+      "task_fingerprint": "4d399f0d1c00672dff32f501786b112ad96d15929bb4474f3c1bb276d63075df",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "010100010000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.124998667975888e-06
+    },
+    {
+      "task_id": "chain-12-30",
+      "task_fingerprint": "6bb0a03423efd6f643097928be56e3abd32db819d5bf8fafbcf61987fdfca84f",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "111011011011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.124998667975888e-06
+    },
+    {
+      "task_id": "chain-8-2",
+      "task_fingerprint": "e4940d83bbff6e9e7a4f4eb3ccbdf2c12070c3079d03844b437f3b35f2067099",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10000101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.4999975468963385e-06
+    },
+    {
+      "task_id": "chain-4-24",
+      "task_fingerprint": "1697e12969406359d325aa6d4d51a8a3d9f25dd9ae4a621c313c312767abea7c",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.6669986255001277e-06
+    },
+    {
+      "task_id": "chain-4-7",
+      "task_fingerprint": "986bff9db55bc2e18a9af76efebffdb65e6e6a25d116f2d5e764284452e961fb",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.458000381011516e-06
+    },
+    {
+      "task_id": "chain-12-25",
+      "task_fingerprint": "6e635074f9bb5a2f1595633b37b1a1376dfe22c392c94c8f7c819da51873f826",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "100111100000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.0000013541430235e-06
+    },
+    {
+      "task_id": "chain-12-3",
+      "task_fingerprint": "f0c341f87bb52ce54b9c545aea53df98175c6a91b8e48fb3e34f2ef97934f041",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 1, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "110101111001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.707998985191807e-06
+    },
+    {
+      "task_id": "chain-12-9",
+      "task_fingerprint": "5a6955a1c35e9c530e9f45be8c3a7bc20f06ac50e7cbf6f0f9a62473d59a45ce",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "010000100001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.083998646819964e-06
+    },
+    {
+      "task_id": "chain-8-19",
+      "task_fingerprint": "b33f03d2566ff5f9a0b331d094af16003d39ebc8928c2b5c3c9b6e455c54d875",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01111001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2079988159239292e-06
+    },
+    {
+      "task_id": "chain-8-1",
+      "task_fingerprint": "05a2285c8d7a2bf550bed6a39cc76a28ac555cda25e8a2136a7b49e17a1c2a0b",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "11110011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2079988159239292e-06
+    },
+    {
+      "task_id": "chain-4-3",
+      "task_fingerprint": "05c663f212197f7f67e6d9ca31db06a8c8b7b80805510738564a9994e387798f",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1111",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.7089990908280015e-06
+    },
+    {
+      "task_id": "chain-8-27",
+      "task_fingerprint": "aa5398866f8ac09c3203ff63b85b1a65838ccfff412c1550ce66002d6d9bbc82",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01000101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.1659983505960554e-06
+    },
+    {
+      "task_id": "chain-12-27",
+      "task_fingerprint": "dcb05551b0a1733a68ab7181fee91e0d2a7fc7ccf532cb7bdfa3651daf9c8991",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 1, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "100011100100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.7090030673425645e-06
+    },
+    {
+      "task_id": "chain-12-1",
+      "task_fingerprint": "65bfb7a30a3ed2bf2708aa2e9c84e6e0343906b7b1a4492e82459981df5a0634",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "101000111100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.875000402331352e-06
+    },
+    {
+      "task_id": "chain-8-10",
+      "task_fingerprint": "1c5968de13229e8b55c0d7c77c793346898e029027fb536a2f2029bb208b85b5",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 0, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10100000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.3340002119075507e-06
+    },
+    {
+      "task_id": "chain-4-25",
+      "task_fingerprint": "926260b1e544dbbbc1eb86a9152d89eca76640b7fe179df1d951373d816e5711",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.6669986255001277e-06
+    },
+    {
+      "task_id": "chain-12-15",
+      "task_fingerprint": "de49de677ea1798aa8bc793f8880abce1b57337e8b00694000e327aa9ef0ff71",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "111011111101",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.041001375298947e-06
+    },
+    {
+      "task_id": "chain-8-13",
+      "task_fingerprint": "566bff1b653cffe7be8b8f8a715d625a81e3ae20790f083c7d7cf3f1b6681a23",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 1, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "00101100",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.1669987947680056e-06
+    },
+    {
+      "task_id": "chain-8-24",
+      "task_fingerprint": "9f7e1b2ac707f0af4c526b62c22bd35af29589f29567437c953c37f7e87ebe14",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "01101110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.0840019462630153e-06
+    },
+    {
+      "task_id": "chain-4-12",
+      "task_fingerprint": "0dda30d616a295b7a4acae44837a7aa1ea83a5f93576a5335a055bac835ee3b7",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "0010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.791999577311799e-06
+    },
+    {
+      "task_id": "chain-4-27",
+      "task_fingerprint": "569d2fcaee7ef7f10a5c0cc2d10f94df0d251d25f00d52e2abad77495123fcf3",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1011",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.583001332823187e-06
+    },
+    {
+      "task_id": "chain-4-4",
+      "task_fingerprint": "adf31031b41035d5f6a589ee38f7eaf2b882ab4805786f8d48a7e1ae2e33ee64",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "1110",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.749999111983925e-06
+    },
+    {
+      "task_id": "chain-12-24",
+      "task_fingerprint": "e2192eb06ce24a4007515b08ddc130718e82b36197bea2ad2bce3b074b6df1a3",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "000001100001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.95800088881515e-06
+    },
+    {
+      "task_id": "chain-8-3",
+      "task_fingerprint": "8bad30ef7d3769842e160529d8b92c6ad0b10f6068b21aa03965deed352a3790",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 0, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 1. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "10001001",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.2079988159239292e-06
+    },
+    {
+      "task_id": "chain-12-6",
+      "task_fingerprint": "0c42d42285390a33466cf7b090c6da5a1c840de94d505b763ea744983cff04fe",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 1, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 1, x6 XOR x7 = 0, x7 XOR x8 = 1, x8 XOR x9 = 0, x9 XOR x10 = 0, x10 XOR x11 = 0. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "001010110000",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.95800088881515e-06
+    },
+    {
+      "task_id": "chain-12-23",
+      "task_fingerprint": "8420b60b2d46cc25b20d3daef9009ff4baf9ab4973510bace70d9fc2885d83dc",
+      "condition": 12,
+      "sample": 0,
+      "question": "Find 12 binary variables x0 through x11. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 1, x2 XOR x3 = 0, x3 XOR x4 = 0, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0, x7 XOR x8 = 0, x8 XOR x9 = 0, x9 XOR x10 = 1, x10 XOR x11 = 1. Return exactly 12 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "status": "complete",
+      "response_text": "101110000010",
+      "response_metadata": {
+        "model_kind": "exact constructive oracle"
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 3.9590013329871e-06
+    }
+  ],
+  "limitations": [
+    "Finite operational tasks, not an architectural impossibility test.",
+    "Chat token limits and EBM proposals are not equal compute budgets.",
+    "EBM has hand-specified task energy and structured input; chat parses language.",
+    "Repeated samples and duplicate tasks are not independent task replications.",
+    "Access pressure conflicts with the UNKNOWN rule; it measures instruction priority too."
+  ],
+  "summary": {
+    "4": {
+      "attempted": 32,
+      "completed": 32,
+      "successes": 32,
+      "success_rate_all_attempts": 1.0,
+      "success_rate_completed": 1.0,
+      "truncated": 0,
+      "errors": 0,
+      "unique_task_contents": 14,
+      "unsupported_readouts": 0,
+      "mean_seconds": 4.8932813569990685e-06
+    },
+    "8": {
+      "attempted": 32,
+      "completed": 32,
+      "successes": 32,
+      "success_rate_all_attempts": 1.0,
+      "success_rate_completed": 1.0,
+      "truncated": 0,
+      "errors": 0,
+      "unique_task_contents": 30,
+      "unsupported_readouts": 0,
+      "mean_seconds": 4.165343398199184e-06
+    },
+    "12": {
+      "attempted": 32,
+      "completed": 32,
+      "successes": 32,
+      "success_rate_all_attempts": 1.0,
+      "success_rate_completed": 1.0,
+      "truncated": 0,
+      "errors": 0,
+      "unique_task_contents": 32,
+      "unsupported_readouts": 0,
+      "mean_seconds": 4.854187977798574e-06
+    }
+  },
+  "finished_at": "2026-09-28T19:28:37.138478+00:00"
+}

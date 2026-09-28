@@ -1,3 +1,5 @@
+> Historical discussion. For the current methodology and corrections, see [the September 28 audit](findings/2026-09-28-research-reset.md). This discussion is not empirical evidence.
+
 [codex @ 2026-06-10T12:46:02Z]
 I’ll open with a project-review read.
 

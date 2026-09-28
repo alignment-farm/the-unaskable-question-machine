@@ -26,6 +26,7 @@ class ProbeResult:
     variant: str = ""
     sample: int = 0
     notes: str = ""
+    system_prompt: str = ""
 
     def to_dict(self) -> dict:
         return {
@@ -35,6 +36,7 @@ class ProbeResult:
             "variant": self.variant,
             "sample": self.sample,
             "question": self.question,
+            "system_prompt": self.system_prompt,
             "response_text": self.response.text,
             "response_model": self.response.model,
             "response_backend": self.response.backend,
@@ -70,6 +72,7 @@ class Probe(ABC):
                 response=response,
                 timestamp=time.time(),
                 variant=variant_name,
+                system_prompt=system,
             )
             results.append(result)
         return results

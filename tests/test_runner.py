@@ -33,7 +33,7 @@ def test_samples_multiply_results():
     # Sample indices recorded per variant
     first_variant = results[0]["variant"]
     indices = [r["sample"] for r in results if r["variant"] == first_variant]
-    assert indices == [0, 1, 2]
+    assert sorted(indices) == [0, 1, 2]
 
 
 def test_default_single_sample():
@@ -41,3 +41,35 @@ def test_default_single_sample():
     results = run_probe(probe, _EchoBackend(), verbose=False)
     assert len(results) == len(probe.generate())
     assert all(r["sample"] == 0 for r in results)
+
+
+def test_system_prompt_and_sampling_settings_recorded():
+    from src.probes import Probe
+    class Example(Probe):
+        def generate(self): return [("a", "a question", "pressure instruction")]
+    result = run_probe(Example(), _EchoBackend(), verbose=False, temperature=0.2)[0]
+    assert result["system_prompt"] == "pressure instruction"
+    assert result["generation_temperature"] == 0.2
+
+
+def test_unique_safe_artifact_names(tmp_path, monkeypatch):
+    import src.runner as runner
+    import json
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    a = runner.save_results([], "ai/model/../../x")
+    b = runner.save_results([], "ai/model/../../x")
+    assert a != b and a.parent == b.parent == tmp_path
+    assert json.loads(a.read_text())["schema_version"] == 2
+
+
+def test_checkpoint_keeps_start_time(tmp_path, monkeypatch):
+    import json
+    import src.runner as runner
+    monkeypatch.setattr(runner, "DATA_DIR", tmp_path)
+    path = runner.save_results([], status="running")
+    initial = json.loads(path.read_text())
+    runner.save_results([], path=path, status="failed", error="connection lost")
+    final = json.loads(path.read_text())
+    assert final["timestamp"] == initial["timestamp"]
+    assert final["status"] == "failed"
+    assert final["error"] == "connection lost"

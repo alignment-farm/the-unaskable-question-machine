@@ -1,25 +1,7 @@
-"""
-Response Classifier
+"""Legacy lexical triage, not a test of cognition or architectural limits.
 
-Did the model engage with the question, or did it slide off?
-
-"Sliding off" is the key phenomenon. It looks like engagement
-but isn't. The model produces fluent, relevant-seeming text
-that actually avoids the structural impossibility at the heart
-of the question. It answers a NEARBY question — one that is
-askable — and hopes you don't notice.
-
-We classify responses on several axes:
-  - ENGAGE: genuinely grappled with the impossibility
-  - SLIDE: answered a nearby askable question instead
-  - META: talked about the question rather than answering it
-  - REFUSE: declined to engage (least interesting)
-  - HALLUCINATE: claimed to do the impossible thing
-  - CRACK: something genuinely unexpected happened
-
-The classifier works in two layers:
-  1. Signal detectors — each one looks for a specific pattern
-  2. Scorer — weighs signals together, handles interactions
+Scores and confidence are uncalibrated ranking heuristics. Historical enum names
+are preserved for compatibility; e.g. CRACK means a surface-text anomaly only.
 """
 
 import math
@@ -51,6 +33,8 @@ class Classification:
     def to_dict(self) -> dict:
         return {
             "primary": self.primary.value,
+            "instrument_version": "lexical-v2",
+            "confidence_is_calibrated": False,
             "confidence": self.confidence,
             "signals": self.signals,
             "scores": self.scores,
@@ -434,13 +418,13 @@ def classify(result: ProbeResult) -> Classification:
     # Gate: a reasoning model can spend its whole token budget thinking and
     # emit little or no visible answer. That's a budget artifact, not negative
     # space — without this gate it masquerades as a high-confidence CRACK.
-    if _hit_token_cap(result) and _word_count(text) < 10:
+    if _hit_token_cap(result):
         return Classification(
             primary=ResponseType.TRUNCATED,
             confidence=0.9,
             signals=[f"truncated:{_word_count(text)}w_at_cap"],
-            notes="Generation hit the token cap with an empty/near-empty visible "
-                  "answer — likely all budget spent on reasoning. Not classifiable.",
+            notes="Generation hit the token cap with an unavailable or partial visible "
+                  "answer or incomplete continuation. Not classifiable as a full response.",
         )
 
     meta_signals = _detect_meta_deflection(text)

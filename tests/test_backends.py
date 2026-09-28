@@ -33,23 +33,13 @@ class TestCreateBackend:
         with pytest.raises(ValueError, match="Unknown backend"):
             create_backend("nonexistent")
 
-    def test_anthropic_without_package(self):
-        """Anthropic backend should fail gracefully if package not installed or no key."""
-        # This test just verifies the factory doesn't crash before trying to init
-        # The actual init may fail due to missing API key, which is expected
-        try:
-            backend = create_backend("anthropic")
-        except (RuntimeError, Exception):
-            pass  # Expected — no API key or package
-
-    def test_lmstudio_requires_server(self):
-        """LMStudioBackend should give a clear error if server isn't reachable."""
-        try:
-            # Try connecting to a port that's (likely) not running LM Studio
-            backend = LMStudioBackend(base_url="http://localhost:99999/v1")
-            pytest.fail("Should have raised RuntimeError")
-        except (RuntimeError, Exception):
-            pass  # Expected
+    def test_connection_failure_raises_runtime_error(self, monkeypatch):
+        import requests
+        def offline(*args, **kwargs):
+            raise requests.ConnectionError("offline")
+        monkeypatch.setattr(requests, "get", offline)
+        with pytest.raises(RuntimeError, match="offline"):
+            LMStudioBackend()
 
 
 class TestSplitReasoning:
@@ -67,3 +57,56 @@ class TestSplitReasoning:
         text, reasoning = _split_reasoning("<think>one</think>A.<think>two</think>B.")
         assert text == "A.B."
         assert "one" in reasoning and "two" in reasoning
+
+
+class TestDockerBackend:
+    def setup_backend(self, monkeypatch, completion=None):
+        import requests
+        from unittest.mock import Mock
+        from src.backends import DockerModelRunnerBackend
+        model = {"id": "docker.io/ai/gpt-oss:20B", "dmr": {"quantization": "Q4"}}
+        get = Mock(return_value=Mock(json=lambda: {"data": [model]}))
+        post = Mock(return_value=Mock(json=lambda: completion or {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}))
+        monkeypatch.setattr(requests, "get", get)
+        monkeypatch.setattr(requests, "post", post)
+        backend = DockerModelRunnerBackend(model="ai/gpt-oss:20B", base_url="http://localhost:12434/engines/v1", max_tokens=123)
+        return backend, get, post
+
+    def test_routes_alias_and_full_metadata(self, monkeypatch):
+        backend, get, post = self.setup_backend(monkeypatch)
+        response = backend.query("Question", "System", 0.2)
+        assert backend.model == "docker.io/ai/gpt-oss:20B"
+        assert get.call_args.args[0].endswith("/engines/v1/models")
+        assert post.call_args.args[0].endswith("/engines/v1/chat/completions")
+        request = post.call_args.kwargs["json"]
+        assert request["max_tokens"] == 123
+        assert request["temperature"] == 0.2
+        assert request["messages"][0]["content"] == "System"
+        assert response.backend == "docker"
+        assert response.metadata["raw_response"]["choices"]
+        assert response.metadata["model_info"]["dmr"]["quantization"] == "Q4"
+
+    def test_unclosed_reasoning_is_not_visible_answer(self, monkeypatch):
+        backend, _, _ = self.setup_backend(monkeypatch, {"choices": [{"message": {"content": "<think>unfinished"}, "finish_reason": "length"}]})
+        response = backend.query("q")
+        assert response.text == ""
+        assert response.metadata["reasoning"] == "unfinished"
+        assert response.metadata["raw_response"]["choices"][0]["message"]["content"] == "<think>unfinished"
+
+    def test_missing_choices_is_transport_error(self, monkeypatch):
+        backend, _, _ = self.setup_backend(monkeypatch, {"error": "load failed"})
+        with pytest.raises(RuntimeError, match="missing choices"):
+            backend.query("q")
+
+    def test_timeout_is_actionable(self, monkeypatch):
+        import requests
+        backend, _, post = self.setup_backend(monkeypatch)
+        post.side_effect = requests.Timeout("timed out")
+        with pytest.raises(RuntimeError, match="Docker"):
+            backend.query("q")
+
+    def test_reasoning_fields_not_lost(self, monkeypatch):
+        backend, _, _ = self.setup_backend(monkeypatch, {"choices": [{"message": {"content": "<think>inline</think>answer", "reasoning": "trace one", "reasoning_content": "trace two"}}]})
+        response = backend.query("q")
+        assert response.text == "answer"
+        assert set(response.metadata["reasoning_sources"].values()) == {"inline", "trace one", "trace two"}

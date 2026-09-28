@@ -13,6 +13,8 @@ import sys
 import time
 import threading
 import uuid
+import random
+from src.artifacts import artifact_path, atomic_write, source_provenance, utc_now
 from pathlib import Path
 from datetime import datetime
 
@@ -67,7 +69,8 @@ class _Spinner:
 
 
 def run_probe(probe: Probe, backend: Backend, verbose: bool = True,
-              samples: int = 1) -> list[dict]:
+              samples: int = 1, temperature: float = 0.7,
+              order_seed: int = 0, on_result=None) -> list[dict]:
     """Run a single probe and classify results.
 
     samples > 1 fires each variant that many times — one classified result
@@ -80,40 +83,36 @@ def run_probe(probe: Probe, backend: Backend, verbose: bool = True,
         print(f"  {probe.description}")
         print(f"  {'='*56}")
 
+    if samples < 1:
+        raise ValueError("samples must be positive")
     variants = probe.generate()
     classified = []
 
-    for i, (variant_name, question, system) in enumerate(variants):
-        for s in range(max(1, samples)):
-            if verbose:
-                label = f"[{i+1}/{len(variants)}] {variant_name}"
-                if samples > 1:
-                    label += f" (sample {s+1}/{samples})"
-                spinner = _Spinner(label)
-                spinner.start()
-
-            response = backend.query(prompt=question, system=system)
+    schedule = [(i, s) for i in range(len(variants)) for s in range(samples)]
+    random.Random(order_seed).shuffle(schedule)
+    for i, s in schedule:
+        variant_name, question, system = variants[i]
+        spinner = _Spinner(f"{variant_name} (sample {s+1}/{samples})") if verbose else None
+        if spinner:
+            spinner.start()
+        try:
+            response = backend.query(prompt=question, system=system, temperature=temperature)
             result = ProbeResult(
-                probe_id=str(uuid.uuid4())[:8],
-                category=probe.category,
-                probe_name=probe.name,
-                question=question,
-                response=response,
-                timestamp=time.time(),
-                variant=variant_name,
-                sample=s,
+                probe_id=uuid.uuid4().hex, category=probe.category, probe_name=probe.name,
+                question=question, response=response, timestamp=time.time(),
+                variant=variant_name, sample=s, system_prompt=system,
             )
-
             classification = classify(result)
-            entry = {
-                **result.to_dict(),
-                "classification": classification.to_dict(),
-            }
+            entry = {**result.to_dict(), "classification": classification.to_dict(),
+                     "generation_temperature": temperature, "order_seed": order_seed}
             classified.append(entry)
-
-            if verbose:
+            if on_result:
+                on_result(entry)
+        finally:
+            if spinner:
                 spinner.stop()
-                _print_result(result, classification)
+        if verbose:
+            _print_result(result, classification)
 
     return classified
 
@@ -153,23 +152,20 @@ def run_all(backend: Backend, verbose: bool = True, samples: int = 1) -> list[di
     return all_results
 
 
-def save_results(results: list[dict], tag: str = "") -> Path:
-    """Write results to JSON. Every run is preserved."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    suffix = f"_{tag}" if tag else ""
-    filename = f"run_{timestamp}{suffix}.json"
-    path = DATA_DIR / filename
-
+def save_results(results: list[dict], tag: str = "", *, path: Path | None = None,
+                 status: str = "complete", config: dict | None = None,
+                 provenance: dict | None = None, error: str | None = None) -> Path:
+    """Atomic checkpoints; a new call without a path never overwrites a run."""
+    path = path or artifact_path(DATA_DIR, "run", tag)
+    started_at = json.loads(path.read_text()).get("timestamp") if path.exists() else utc_now()
     output = {
-        "timestamp": datetime.now().isoformat(),
-        "tag": tag,
-        "total_probes": len(results),
-        "results": results,
-        "summary": _build_summary(results),
+        "schema_version": 2, "timestamp": started_at, "updated_at": utc_now(), "tag": tag, "status": status,
+        "config": config or {}, "provenance": provenance or source_provenance(),
+        "total_probes": len(results), "results": results, "summary": _build_summary(results),
+        "error": error,
+        "interpretation": "Exploratory text labels; not evidence of architectural impossibility or mental states.",
     }
-
-    path.write_text(json.dumps(output, indent=2, default=str))
+    atomic_write(path, output)
     return path
 
 

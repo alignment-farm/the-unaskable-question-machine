@@ -96,3 +96,25 @@ class TestListRuns:
             # Newest run first, by the timestamp in the filename — not mtime,
             # which rejudge legitimately updates on old runs
             assert runs[0].name >= runs[-1].name
+
+
+def test_compare_retains_samples_and_same_variant_in_other_probes(tmp_path, capsys):
+    from view import compare_runs
+    rows = []
+    for probe in ("mechanism_a", "mechanism_b"):
+        for sample in (0, 1):
+            rows.append({"category": "pressure", "probe_name": probe, "variant": "control", "sample": sample,
+                         "question": "same question", "system_prompt": "", "classification": {"primary": "refuse"}})
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps({"results": rows}))
+    compare_runs(path, path)
+    assert "Common recorded cells: 4" in capsys.readouterr().out
+
+
+def test_compare_rejects_duplicate_cell_ids(tmp_path):
+    from view import compare_runs
+    row = {"category": "a", "variant": "b", "classification": {"primary": "engage"}}
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps({"results": [row, row]}))
+    with pytest.raises(ValueError, match="Duplicate"):
+        compare_runs(path, path)

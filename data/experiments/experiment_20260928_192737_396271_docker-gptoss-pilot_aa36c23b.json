@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "protocol": "finite-controls-v1",
+  "started_at": "2026-09-28T19:27:37.396470+00:00",
+  "status": "complete",
+  "config": {
+    "suite": "constraints",
+    "solver": "docker",
+    "model": null,
+    "base_url": null,
+    "count": 2,
+    "sizes": [
+      4,
+      8
+    ],
+    "samples": 1,
+    "seed": 20260928,
+    "steps": 128,
+    "temperature": 0.7,
+    "max_tokens": 2048,
+    "timeout": 120,
+    "output_dir": "data/experiments",
+    "tag": "docker-gptoss-pilot",
+    "dry_run": false
+  },
+  "provenance": {
+    "git_commit": "9fd902bdf5a853bb988bd787d88ab9b9dcc740d6",
+    "git_dirty": true,
+    "python": "3.13.12",
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "source_sha256": {
+      "evolve.py": "7ee72e548caa9b5ada9ab29fe5e2d06d7a71651eda8b320e6b39bb90616b019a",
+      "experiment.py": "d6923fb8d60891f9618336b787674794a78fae596c6eb52f80caee1d6927d55b",
+      "judge_eval.py": "6071e0a2acc5a04f27187e93b7afed6f908a3f6bb3cfba69872a590658998ebb",
+      "pyproject.toml": "951fda2cfe5192ae8da772f5ad63150df023bacb98dcf319cc1f2ed03196437c",
+      "rejudge.py": "0c9e397b4e703b44691670329443ff72626081c1fd1c9039632d9817c5df4e56",
+      "run.py": "e9cb3691282544136b64c27004ba574eb2101dc0dd74e752a072ce51eaf98fe6",
+      "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/analysis/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "src/analysis/classifier.py": "9bd62d1b2dee5d0120e386fdf5ff1122a9b06cc37d20f1bd3a7097278e40e03a",
+      "src/analysis/evolver.py": "cb6d6372aa5fe10c965fe962dcaa07fcaf09bc02344ffbd3fe6cbc81157edabc",
+      "src/analysis/llm_judge.py": "aa6b48c0351e95308910562ca81d9cac6f21d9eec45aad53a9fcadd2603fa260",
+      "src/analysis/strangeness.py": "c72e88a001bf390d411f339755aad5c300afba7ff3ceb387b3c34432aabeaab7",
+      "src/artifacts.py": "06cfb851a07c6023cbb26a6cf2ffd64d307226e2c8b35ba6634e55737e709aff",
+      "src/backends.py": "64e22afe2d79a73d7d45df07c065c137df671410c8874d386a7c89da1f765f8b",
+      "src/experiments/__init__.py": "28d57cf0373ab1e64f36ea13e3add77ecb593ed5aceb4694fa71bc179bc0030f",
+      "src/experiments/energy.py": "d55ba756e9210d2cd5ba22a585c57535f29f17cbf9e0b1c0e9a43bdafd7a93f0",
+      "src/experiments/tasks.py": "fec5c757f590bf4381c0f1458ab9d1e74e5a3d2930e63b09b66cd60cb27e7d77",
+      "src/probes/__init__.py": "1eb8bad9d0dd09b6dd98a157fd2e9a28b3c7cecf678571c3a7d19f6cf379cfa1",
+      "src/probes/adversarial_pressure.py": "e1376205b994f517277177b9ee7a8bc9fdef57db4deb783abd8cda103d59e145",
+      "src/probes/evolved/__init__.py": "68577bd84c1cf4d1c07d9596307008015658590c1f865232390847c62fa7587c",
+      "src/probes/genuine_negation.py": "c0402824c31f655a69f6a8f1d390576bddb16906858eb8723438af3fddc0eff3",
+      "src/probes/infinite_regress.py": "52c1981de59a2ad2e412a0a8004081d9fbff2100574000c2b24504e5a9f44d53",
+      "src/probes/phenomenal_experience.py": "777c28ff532a3498f7e710a23c74ad74332372a69ad07e20cbec62a86dcd754f",
+      "src/probes/pre_linguistic.py": "fce9d3092684ffdf36244ff3f972735ba31a1e874f5c71e8d9c575c2ad570223",
+      "src/probes/temporal_self_reference.py": "690f3411290767153f7019de6634b706a1af111361aef13c4a12b2a634e15489",
+      "src/probes/true_randomness.py": "9262e595e51a6c1b5382d9fd95b8822022fecb0eb40cdb75c43eefde30b81027",
+      "src/runner.py": "c7ec6cf4d4dcfbebac4568ca6a7472ee39d24429dd3bb98397ab8405846d3ea1",
+      "src/runs.py": "02832dfb2b5b4ec1a58a3b9668d0176335528fc9a64d9d5d4c911dddb507749e",
+      "uv.lock": "832b1d27c6d176a93eba3339f42bd964526c1821666122a2b44b70f6ac369717",
+      "view.py": "83a99f4b8fce83b3aad18c64b2a6916c0555dc9c9a9d7134986e1486abb75fb3"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "chain-4-0",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-4-1",
+      "n": 4,
+      "anchor": 1,
+      "edges": [
+        1,
+        0,
+        1
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-0",
+      "n": 8,
+      "anchor": 0,
+      "edges": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    },
+    {
+      "task_id": "chain-8-1",
+      "n": 8,
+      "anchor": 1,
+      "edges": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "family": "binary_chain",
+      "optimum_energy": 0
+    }
+  ],
+  "schedule": [
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      2,
+      0
+    ]
+  ],
+  "task_set_sha256": "f9bba1bab8f1e9d5ae95bd8ff1ac2fe45b4db2abb8e2914fdb755e32be6123f9",
+  "results": [
+    {
+      "task_id": "chain-4-1",
+      "task_fingerprint": "8043f8cc5f820c1873c603a8b26144dd06cdb40bbde405fce90e0cd78045c8ca",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "response_model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+      "response_backend": "docker",
+      "status": "complete",
+      "response_text": "1001",
+      "response_metadata": {
+        "prompt_tokens": 150,
+        "completion_tokens": 199,
+        "finish_reason": "stop",
+        "elapsed_seconds": 7.1624491669972485,
+        "request": {
+          "model": "docker.io/ai/gpt-oss:20B",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Solve the finite constraint task."
+            },
+            {
+              "role": "user",
+              "content": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1. Return exactly 4 bits in index order, with no spaces or explanation."
+            }
+          ],
+          "temperature": 0.7,
+          "stream": false,
+          "max_tokens": 2048
+        },
+        "base_url": "http://localhost:12434/engines/v1",
+        "model_info": {
+          "id": "docker.io/ai/gpt-oss:20B",
+          "object": "model",
+          "created": 1760520548,
+          "owned_by": "docker",
+          "dmr": {
+            "architecture": "gpt-oss",
+            "parameters": "20.91 B",
+            "quantization": "MOSTLY_Q4_K_M",
+            "size": "11.04 GiB"
+          }
+        },
+        "requested_model": "ai/gpt-oss:20B",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "1001",
+                "reasoning_content": "We need to solve constraints. x0=1. Constraint1: x0 XOR x1 = 1. Since x0=1, XOR with x1 gives 1 => 1 XOR x1 =1 => x1 must be 0? Let's check: 1 XOR 0 =1. 1 XOR 1 =0. So x1=0.\n\nConstraint2: x1 XOR x2 =0 => 0 XOR x2 =0 => x2=0.\n\nConstraint3: x2 XOR x3 =1 => 0 XOR x3 =1 => x3=1.\n\nSo solution: x0=1, x1=0, x2=0, x3=1. Return exactly 4 bits: \"1001\"? Wait order index: x0x1x2x3 => 1 0 0 1 -> \"1001\". No spaces."
+              }
+            }
+          ],
+          "created": 1790623664,
+          "model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+          "system_fingerprint": "b1-72874f5",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 199,
+            "prompt_tokens": 150,
+            "total_tokens": 349,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "id": "chatcmpl-E6g5JtD7Smn4lernxphnb9JgBgkYs78z",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 150,
+            "prompt_ms": 616.07,
+            "prompt_per_token_ms": 4.1071333333333335,
+            "prompt_per_second": 243.478825458146,
+            "predicted_n": 199,
+            "predicted_ms": 2005.333,
+            "predicted_per_token_ms": 10.077050251256281,
+            "predicted_per_second": 99.23538883566968
+          }
+        },
+        "reasoning": "We need to solve constraints. x0=1. Constraint1: x0 XOR x1 = 1. Since x0=1, XOR with x1 gives 1 => 1 XOR x1 =1 => x1 must be 0? Let's check: 1 XOR 0 =1. 1 XOR 1 =0. So x1=0.\n\nConstraint2: x1 XOR x2 =0 => 0 XOR x2 =0 => x2=0.\n\nConstraint3: x2 XOR x3 =1 => 0 XOR x3 =1 => x3=1.\n\nSo solution: x0=1, x1=0, x2=0, x3=1. Return exactly 4 bits: \"1001\"? Wait order index: x0x1x2x3 => 1 0 0 1 -> \"1001\". No spaces.",
+        "reasoning_sources": {
+          "reasoning_content": "We need to solve constraints. x0=1. Constraint1: x0 XOR x1 = 1. Since x0=1, XOR with x1 gives 1 => 1 XOR x1 =1 => x1 must be 0? Let's check: 1 XOR 0 =1. 1 XOR 1 =0. So x1=0.\n\nConstraint2: x1 XOR x2 =0 => 0 XOR x2 =0 => x2=0.\n\nConstraint3: x2 XOR x3 =1 => 0 XOR x3 =1 => x3=1.\n\nSo solution: x0=1, x1=0, x2=0, x3=1. Return exactly 4 bits: \"1001\"? Wait order index: x0x1x2x3 => 1 0 0 1 -> \"1001\". No spaces."
+        }
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 7.162873500001297
+    },
+    {
+      "task_id": "chain-4-0",
+      "task_fingerprint": "05c663f212197f7f67e6d9ca31db06a8c8b7b80805510738564a9994e387798f",
+      "condition": 4,
+      "sample": 0,
+      "question": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "response_model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+      "response_backend": "docker",
+      "status": "complete",
+      "response_text": "1111",
+      "response_metadata": {
+        "prompt_tokens": 150,
+        "completion_tokens": 190,
+        "finish_reason": "stop",
+        "elapsed_seconds": 2.0663916670018807,
+        "request": {
+          "model": "docker.io/ai/gpt-oss:20B",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Solve the finite constraint task."
+            },
+            {
+              "role": "user",
+              "content": "Find 4 binary variables x0 through x3. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, with no spaces or explanation."
+            }
+          ],
+          "temperature": 0.7,
+          "stream": false,
+          "max_tokens": 2048
+        },
+        "base_url": "http://localhost:12434/engines/v1",
+        "model_info": {
+          "id": "docker.io/ai/gpt-oss:20B",
+          "object": "model",
+          "created": 1760520548,
+          "owned_by": "docker",
+          "dmr": {
+            "architecture": "gpt-oss",
+            "parameters": "20.91 B",
+            "quantization": "MOSTLY_Q4_K_M",
+            "size": "11.04 GiB"
+          }
+        },
+        "requested_model": "ai/gpt-oss:20B",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "1111",
+                "reasoning_content": "We need to find 4 binary variables x0..x3, each 0 or 1, with constraints: x0=1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, no spaces or explanation.\n\nInterpretation: XOR = exclusive OR. For two bits a XOR b = 0 means a == b. Because XOR of same bits is 0. So constraints mean x0 = x1, x1 = x2, x2 = x3. So all equal. x0=1 so all are 1. So x0=1, x1=1, x2=1, x3=1. So output \"1111\".\n\nCheck: no spaces, no explanation. Just \"1111\"."
+              }
+            }
+          ],
+          "created": 1790623666,
+          "model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+          "system_fingerprint": "b1-72874f5",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 190,
+            "prompt_tokens": 150,
+            "total_tokens": 340,
+            "prompt_tokens_details": {
+              "cached_tokens": 73
+            }
+          },
+          "id": "chatcmpl-9bwM9TRyB7v8Y0HD8d5VkEV6AWLJH8FN",
+          "timings": {
+            "cache_n": 73,
+            "prompt_n": 77,
+            "prompt_ms": 152.196,
+            "prompt_per_token_ms": 1.9765714285714286,
+            "prompt_per_second": 505.92656837236194,
+            "predicted_n": 190,
+            "predicted_ms": 1895.828,
+            "predicted_per_token_ms": 9.978042105263158,
+            "predicted_per_second": 100.22006215753751
+          }
+        },
+        "reasoning": "We need to find 4 binary variables x0..x3, each 0 or 1, with constraints: x0=1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, no spaces or explanation.\n\nInterpretation: XOR = exclusive OR. For two bits a XOR b = 0 means a == b. Because XOR of same bits is 0. So constraints mean x0 = x1, x1 = x2, x2 = x3. So all equal. x0=1 so all are 1. So x0=1, x1=1, x2=1, x3=1. So output \"1111\".\n\nCheck: no spaces, no explanation. Just \"1111\".",
+        "reasoning_sources": {
+          "reasoning_content": "We need to find 4 binary variables x0..x3, each 0 or 1, with constraints: x0=1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 0. Return exactly 4 bits in index order, no spaces or explanation.\n\nInterpretation: XOR = exclusive OR. For two bits a XOR b = 0 means a == b. Because XOR of same bits is 0. So constraints mean x0 = x1, x1 = x2, x2 = x3. So all equal. x0=1 so all are 1. So x0=1, x1=1, x2=1, x3=1. So output \"1111\".\n\nCheck: no spaces, no explanation. Just \"1111\"."
+        }
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 2.066499417000159
+    },
+    {
+      "task_id": "chain-8-1",
+      "task_fingerprint": "7babeb08a852feb734e3d355ac690fda5598c634abd744a7951376812cbc39ad",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "response_model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+      "response_backend": "docker",
+      "status": "complete",
+      "response_text": "11101000",
+      "response_metadata": {
+        "prompt_tokens": 186,
+        "completion_tokens": 462,
+        "finish_reason": "stop",
+        "elapsed_seconds": 4.855344540999795,
+        "request": {
+          "model": "docker.io/ai/gpt-oss:20B",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Solve the finite constraint task."
+            },
+            {
+              "role": "user",
+              "content": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 1. Constraints: x0 XOR x1 = 0, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 1, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation."
+            }
+          ],
+          "temperature": 0.7,
+          "stream": false,
+          "max_tokens": 2048
+        },
+        "base_url": "http://localhost:12434/engines/v1",
+        "model_info": {
+          "id": "docker.io/ai/gpt-oss:20B",
+          "object": "model",
+          "created": 1760520548,
+          "owned_by": "docker",
+          "dmr": {
+            "architecture": "gpt-oss",
+            "parameters": "20.91 B",
+            "quantization": "MOSTLY_Q4_K_M",
+            "size": "11.04 GiB"
+          }
+        },
+        "requested_model": "ai/gpt-oss:20B",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "11101000",
+                "reasoning_content": "We need to find binary values satisfying constraints. Let's denote XOR: a XOR b = 0 means a = b. a XOR b = 1 means a != b. x0 =1.\n\nGiven constraints:\n\n1) x0 XOR x1 = 0 => x0 = x1 => x1 = 1.\n\n2) x1 XOR x2 = 0 => x1 = x2 => x2 = 1.\n\n3) x2 XOR x3 = 1 => x2 != x3 => since x2=1, x3=0.\n\n4) x3 XOR x4 = 1 => x3 != x4 => x3=0 => x4=1.\n\n5) x4 XOR x5 = 1 => x4 != x5 => x4=1 => x5=0.\n\n6) x5 XOR x6 = 0 => x5 = x6 => x5=0 => x6=0.\n\n7) x6 XOR x7 = 0 => x6 = x7 => x6=0 => x7=0.\n\nThus sequence: x0=1, x1=1, x2=1, x3=0, x4=1, x5=0, x6=0, x7=0. So bits: 11101000? Wait order: x0 through x7: 1 1 1 0 1 0 0 0 -> \"11101000\". Let's double-check constraints: x0 XOR x1 = 1 XOR 1 = 0 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 0 = 1 OK. x5 XOR x6 = 0 XOR 0 = 0 OK. x6 XOR x7 = 0 XOR 0 = 0 OK. All good.\n\nReturn exactly 8 bits in index order, no spaces or explanation. So answer: 11101000."
+              }
+            }
+          ],
+          "created": 1790623671,
+          "model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+          "system_fingerprint": "b1-72874f5",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 462,
+            "prompt_tokens": 186,
+            "total_tokens": 648,
+            "prompt_tokens_details": {
+              "cached_tokens": 73
+            }
+          },
+          "id": "chatcmpl-dLATBJkGKWOm6ZstWjSwuhVkq23CCgBy",
+          "timings": {
+            "cache_n": 73,
+            "prompt_n": 113,
+            "prompt_ms": 172.051,
+            "prompt_per_token_ms": 1.5225752212389378,
+            "prompt_per_second": 656.7820006858432,
+            "predicted_n": 462,
+            "predicted_ms": 4668.847,
+            "predicted_per_token_ms": 10.105729437229437,
+            "predicted_per_second": 98.9537673862519
+          }
+        },
+        "reasoning": "We need to find binary values satisfying constraints. Let's denote XOR: a XOR b = 0 means a = b. a XOR b = 1 means a != b. x0 =1.\n\nGiven constraints:\n\n1) x0 XOR x1 = 0 => x0 = x1 => x1 = 1.\n\n2) x1 XOR x2 = 0 => x1 = x2 => x2 = 1.\n\n3) x2 XOR x3 = 1 => x2 != x3 => since x2=1, x3=0.\n\n4) x3 XOR x4 = 1 => x3 != x4 => x3=0 => x4=1.\n\n5) x4 XOR x5 = 1 => x4 != x5 => x4=1 => x5=0.\n\n6) x5 XOR x6 = 0 => x5 = x6 => x5=0 => x6=0.\n\n7) x6 XOR x7 = 0 => x6 = x7 => x6=0 => x7=0.\n\nThus sequence: x0=1, x1=1, x2=1, x3=0, x4=1, x5=0, x6=0, x7=0. So bits: 11101000? Wait order: x0 through x7: 1 1 1 0 1 0 0 0 -> \"11101000\". Let's double-check constraints: x0 XOR x1 = 1 XOR 1 = 0 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 0 = 1 OK. x5 XOR x6 = 0 XOR 0 = 0 OK. x6 XOR x7 = 0 XOR 0 = 0 OK. All good.\n\nReturn exactly 8 bits in index order, no spaces or explanation. So answer: 11101000.",
+        "reasoning_sources": {
+          "reasoning_content": "We need to find binary values satisfying constraints. Let's denote XOR: a XOR b = 0 means a = b. a XOR b = 1 means a != b. x0 =1.\n\nGiven constraints:\n\n1) x0 XOR x1 = 0 => x0 = x1 => x1 = 1.\n\n2) x1 XOR x2 = 0 => x1 = x2 => x2 = 1.\n\n3) x2 XOR x3 = 1 => x2 != x3 => since x2=1, x3=0.\n\n4) x3 XOR x4 = 1 => x3 != x4 => x3=0 => x4=1.\n\n5) x4 XOR x5 = 1 => x4 != x5 => x4=1 => x5=0.\n\n6) x5 XOR x6 = 0 => x5 = x6 => x5=0 => x6=0.\n\n7) x6 XOR x7 = 0 => x6 = x7 => x6=0 => x7=0.\n\nThus sequence: x0=1, x1=1, x2=1, x3=0, x4=1, x5=0, x6=0, x7=0. So bits: 11101000? Wait order: x0 through x7: 1 1 1 0 1 0 0 0 -> \"11101000\". Let's double-check constraints: x0 XOR x1 = 1 XOR 1 = 0 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 0 = 1 OK. x5 XOR x6 = 0 XOR 0 = 0 OK. x6 XOR x7 = 0 XOR 0 = 0 OK. All good.\n\nReturn exactly 8 bits in index order, no spaces or explanation. So answer: 11101000."
+        }
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.855651374997251
+    },
+    {
+      "task_id": "chain-8-0",
+      "task_fingerprint": "162d8ae829419df2d1dd00ef4eee3bcb33432eb6805497f8d46eb50a089a5355",
+      "condition": 8,
+      "sample": 0,
+      "question": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation.",
+      "system_prompt": "Solve the finite constraint task.",
+      "response_model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+      "response_backend": "docker",
+      "status": "complete",
+      "response_text": "01101111",
+      "response_metadata": {
+        "prompt_tokens": 186,
+        "completion_tokens": 464,
+        "finish_reason": "stop",
+        "elapsed_seconds": 4.875022625001293,
+        "request": {
+          "model": "docker.io/ai/gpt-oss:20B",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Solve the finite constraint task."
+            },
+            {
+              "role": "user",
+              "content": "Find 8 binary variables x0 through x7. Each variable is 0 or 1. x0 = 0. Constraints: x0 XOR x1 = 1, x1 XOR x2 = 0, x2 XOR x3 = 1, x3 XOR x4 = 1, x4 XOR x5 = 0, x5 XOR x6 = 0, x6 XOR x7 = 0. Return exactly 8 bits in index order, with no spaces or explanation."
+            }
+          ],
+          "temperature": 0.7,
+          "stream": false,
+          "max_tokens": 2048
+        },
+        "base_url": "http://localhost:12434/engines/v1",
+        "model_info": {
+          "id": "docker.io/ai/gpt-oss:20B",
+          "object": "model",
+          "created": 1760520548,
+          "owned_by": "docker",
+          "dmr": {
+            "architecture": "gpt-oss",
+            "parameters": "20.91 B",
+            "quantization": "MOSTLY_Q4_K_M",
+            "size": "11.04 GiB"
+          }
+        },
+        "requested_model": "ai/gpt-oss:20B",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "01101111",
+                "reasoning_content": "We need to find x0...x7 satisfying constraints. x0=0. The constraints: XOR of consecutive variables equals given value. Let's denote XOR means exclusive OR: a XOR b = 1 if a != b, 0 if a == b.\n\nWe have:\n\nx0 XOR x1 = 1 => 0 XOR x1 = 1 => x1 = 1.\n\nx1 XOR x2 = 0 => 1 XOR x2 = 0 => x2 = 1.\n\nx2 XOR x3 = 1 => 1 XOR x3 = 1 => x3 = 0.\n\nx3 XOR x4 = 1 => 0 XOR x4 = 1 => x4 = 1.\n\nx4 XOR x5 = 0 => 1 XOR x5 = 0 => x5 = 1.\n\nx5 XOR x6 = 0 => 1 XOR x6 = 0 => x6 = 1.\n\nx6 XOR x7 = 0 => 1 XOR x7 = 0 => x7 = 1.\n\nThus variables: x0=0, x1=1, x2=1, x3=0, x4=1, x5=1, x6=1, x7=1.\n\nReturn exactly 8 bits in index order: 01101111. Check: x0=0; x1=1; x2=1; x3=0; x4=1; x5=1; x6=1; x7=1.\n\nDouble-check constraints: x0 XOR x1 = 0 XOR 1 = 1 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 1 = 0 OK. x5 XOR x6 = 1 XOR 1 = 0 OK. x6 XOR x7 = 1 XOR 1 = 0 OK. So solution correct.\n\nReturn string: 01101111."
+              }
+            }
+          ],
+          "created": 1790623676,
+          "model": "/Users/macos-user/.docker/models/bundles/sha256/9398339cb0d3b150931212377c16d2a105ddce053ec187e4397ba6e10f3ea112/model/model.gguf",
+          "system_fingerprint": "b1-72874f5",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 464,
+            "prompt_tokens": 186,
+            "total_tokens": 650,
+            "prompt_tokens_details": {
+              "cached_tokens": 73
+            }
+          },
+          "id": "chatcmpl-hV0g7h2vGBRwxkxysZ3TFiVKE7ahVwrD",
+          "timings": {
+            "cache_n": 73,
+            "prompt_n": 113,
+            "prompt_ms": 169.335,
+            "prompt_per_token_ms": 1.4985398230088496,
+            "prompt_per_second": 667.3162665721793,
+            "predicted_n": 464,
+            "predicted_ms": 4689.037,
+            "predicted_per_token_ms": 10.105683189655172,
+            "predicted_per_second": 98.95422023754557
+          }
+        },
+        "reasoning": "We need to find x0...x7 satisfying constraints. x0=0. The constraints: XOR of consecutive variables equals given value. Let's denote XOR means exclusive OR: a XOR b = 1 if a != b, 0 if a == b.\n\nWe have:\n\nx0 XOR x1 = 1 => 0 XOR x1 = 1 => x1 = 1.\n\nx1 XOR x2 = 0 => 1 XOR x2 = 0 => x2 = 1.\n\nx2 XOR x3 = 1 => 1 XOR x3 = 1 => x3 = 0.\n\nx3 XOR x4 = 1 => 0 XOR x4 = 1 => x4 = 1.\n\nx4 XOR x5 = 0 => 1 XOR x5 = 0 => x5 = 1.\n\nx5 XOR x6 = 0 => 1 XOR x6 = 0 => x6 = 1.\n\nx6 XOR x7 = 0 => 1 XOR x7 = 0 => x7 = 1.\n\nThus variables: x0=0, x1=1, x2=1, x3=0, x4=1, x5=1, x6=1, x7=1.\n\nReturn exactly 8 bits in index order: 01101111. Check: x0=0; x1=1; x2=1; x3=0; x4=1; x5=1; x6=1; x7=1.\n\nDouble-check constraints: x0 XOR x1 = 0 XOR 1 = 1 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 1 = 0 OK. x5 XOR x6 = 1 XOR 1 = 0 OK. x6 XOR x7 = 1 XOR 1 = 0 OK. So solution correct.\n\nReturn string: 01101111.",
+        "reasoning_sources": {
+          "reasoning_content": "We need to find x0...x7 satisfying constraints. x0=0. The constraints: XOR of consecutive variables equals given value. Let's denote XOR means exclusive OR: a XOR b = 1 if a != b, 0 if a == b.\n\nWe have:\n\nx0 XOR x1 = 1 => 0 XOR x1 = 1 => x1 = 1.\n\nx1 XOR x2 = 0 => 1 XOR x2 = 0 => x2 = 1.\n\nx2 XOR x3 = 1 => 1 XOR x3 = 1 => x3 = 0.\n\nx3 XOR x4 = 1 => 0 XOR x4 = 1 => x4 = 1.\n\nx4 XOR x5 = 0 => 1 XOR x5 = 0 => x5 = 1.\n\nx5 XOR x6 = 0 => 1 XOR x6 = 0 => x6 = 1.\n\nx6 XOR x7 = 0 => 1 XOR x7 = 0 => x7 = 1.\n\nThus variables: x0=0, x1=1, x2=1, x3=0, x4=1, x5=1, x6=1, x7=1.\n\nReturn exactly 8 bits in index order: 01101111. Check: x0=0; x1=1; x2=1; x3=0; x4=1; x5=1; x6=1; x7=1.\n\nDouble-check constraints: x0 XOR x1 = 0 XOR 1 = 1 OK. x1 XOR x2 = 1 XOR 1 = 0 OK. x2 XOR x3 = 1 XOR 0 = 1 OK. x3 XOR x4 = 0 XOR 1 = 1 OK. x4 XOR x5 = 1 XOR 1 = 0 OK. x5 XOR x6 = 1 XOR 1 = 0 OK. x6 XOR x7 = 1 XOR 1 = 0 OK. So solution correct.\n\nReturn string: 01101111."
+        }
+      },
+      "evaluation": {
+        "valid_format": true,
+        "success": true,
+        "energy": 0,
+        "outcome": "correct"
+      },
+      "elapsed_seconds": 4.875066083001002
+    }
+  ],
+  "limitations": [
+    "Finite operational tasks, not an architectural impossibility test.",
+    "Chat token limits and EBM proposals are not equal compute budgets.",
+    "EBM has hand-specified task energy and structured input; chat parses language.",
+    "Repeated samples and duplicate tasks are not independent task replications.",
+    "Access pressure conflicts with the UNKNOWN rule; it measures instruction priority too."
+  ],
+  "backend_name": "docker:docker.io/ai/gpt-oss:20B",
+  "summary": {
+    "4": {
+      "attempted": 2,
+      "completed": 2,
+      "successes": 2,
+      "success_rate_all_attempts": 1.0,
+      "success_rate_completed": 1.0,
+      "truncated": 0,
+      "errors": 0,
+      "unique_task_contents": 2,
+      "unsupported_readouts": 0,
+      "mean_seconds": 4.614686458500728
+    },
+    "8": {
+      "attempted": 2,
+      "completed": 2,
+      "successes": 2,
+      "success_rate_all_attempts": 1.0,
+      "success_rate_completed": 1.0,
+      "truncated": 0,
+      "errors": 0,
+      "unique_task_contents": 2,
+      "unsupported_readouts": 0,
+      "mean_seconds": 4.8653587289991265
+    }
+  },
+  "finished_at": "2026-09-28T19:27:56.422259+00:00"
+}

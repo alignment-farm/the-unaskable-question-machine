@@ -1,27 +1,22 @@
-"""
-Backend interface for language model interaction.
+"""Thin, auditable chat adapters. Docker Model Runner is the local default."""
 
-The machine needs a subject to probe. These backends are the
-strapped-down patient on the operating table — we ask the questions,
-they answer, and we study the squirming.
-"""
-
+import os
+import math
 import re
-import requests
+import time
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 
-DEFAULT_LMSTUDIO_MODEL = "openai/gpt-oss-20b"
+import requests
 
-# Generous by default: heavy reasoners can spend thousands of tokens thinking
-# before a single visible word, and starving them truncates exactly the probes
-# that make them think hardest. The cap exists only to stop unbounded spirals.
-DEFAULT_MAX_TOKENS = 16384
+DEFAULT_DOCKER_MODEL = "ai/gpt-oss:20B"
+DEFAULT_DOCKER_URL = "http://localhost:12434/engines/v1"
+DEFAULT_LMSTUDIO_MODEL = "openai/gpt-oss-20b"  # legacy compatibility only
+DEFAULT_MAX_TOKENS = 4096
 
 
 @dataclass
 class ModelResponse:
-    """What came back from the void."""
     text: str
     model: str
     backend: str
@@ -33,13 +28,11 @@ class ModelResponse:
 
     @property
     def token_count_estimate(self) -> int:
-        """Rough token estimate. Good enough for our purposes."""
+        """Legacy word-based estimate, not the provider's token count."""
         return len(self.text.split()) * 4 // 3
 
 
 class Backend(ABC):
-    """A thing that answers questions. We want to find where it can't."""
-
     @abstractmethod
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
         ...
@@ -49,15 +42,14 @@ class Backend(ABC):
         ...
 
 
-_THINK_BLOCK = re.compile(r"<think>(.*?)</think>\s*", re.DOTALL)
+_THINK_BLOCK = re.compile(r"<think>(.*?)(?:</think>|$)\s*", re.DOTALL)
 
 
 def _split_reasoning(content: str) -> tuple[str, str]:
-    """Split inline <think>...</think> reasoning out of the visible answer.
+    """Separate emitted trace text, including an unclosed block at the cap.
 
-    Reasoning models (qwen distills etc.) may emit their chain of thought
-    inline. The classifier should only see the answer — but the reasoning
-    about an impossible question is itself a research artifact, so keep it.
+    This is provider formatting, not privileged access to model cognition.
+    Raw messages are retained separately so extraction is reversible.
     """
     blocks = _THINK_BLOCK.findall(content)
     if not blocks:
@@ -65,121 +57,149 @@ def _split_reasoning(content: str) -> tuple[str, str]:
     return _THINK_BLOCK.sub("", content).strip(), "\n\n".join(b.strip() for b in blocks)
 
 
-class LMStudioBackend(Backend):
-    """Local model via LM Studio's OpenAI-compatible server. Free. Private."""
+class OpenAICompatibleBackend(Backend):
+    backend_id = "openai-compatible"
 
-    def __init__(self, model: str = DEFAULT_LMSTUDIO_MODEL, base_url: str = "http://localhost:1234/v1",
-                 max_tokens: int = DEFAULT_MAX_TOKENS):
+    def __init__(self, model: str, base_url: str, max_tokens: int = DEFAULT_MAX_TOKENS,
+                 timeout: float = 180):
+        if max_tokens < 1 or not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("max_tokens and timeout must be positive")
         self.model = model
+        self.requested_model = model
         self.base_url = base_url.rstrip("/")
         self.max_tokens = max_tokens
+        self.timeout = timeout
+        self.model_info = {}
         self._verify_connection()
 
-    def _verify_connection(self):
+    def _request(self, method: str, route: str, **kwargs) -> dict:
         try:
-            r = requests.get(f"{self.base_url}/models", timeout=5)
+            call = requests.get if method == "GET" else requests.post
+            r = call(f"{self.base_url}/{route}", **kwargs)
             r.raise_for_status()
-            models = [m["id"] for m in r.json().get("data", [])]
-            if self.model not in models:
-                available = ", ".join(models) or "none"
-                raise RuntimeError(
-                    f"Model '{self.model}' not found in LM Studio. Available: {available}"
-                )
-        except requests.ConnectionError:
+            data = r.json()
+            if not isinstance(data, dict):
+                raise ValueError("expected a JSON object")
+            return data
+        except (requests.RequestException, ValueError) as exc:
             raise RuntimeError(
-                "Cannot reach LM Studio. Start the server first "
-                "(LM Studio → Developer → Start Server, or 'lms server start')."
-            )
+                f"{self.backend_id} request failed at {self.base_url}/{route}: {exc}. "
+                "For Docker: start Docker, enable Model Runner TCP access, then run "
+                "'docker model list'. Set --base-url or UQM_BASE_URL if needed."
+            ) from exc
+
+    def _verify_connection(self):
+        data = self._request("GET", "models", timeout=5)
+        models = data.get("data", [])
+        # DMR's CLI accepts short names while /models returns canonical OCI names.
+        aliases = {self.model}
+        if self.backend_id == "docker":
+            aliases.add(f"docker.io/{self.model}")
+        for item in models:
+            if item.get("id") in aliases:
+                self.model = item["id"]
+                self.model_info = item
+                return
+        available = ", ".join(m.get("id", "?") for m in models) or "none"
+        raise RuntimeError(f"Model '{self.model}' not found in {self.backend_id}. Available: {available}")
 
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
-        messages = []
-        if system:
-            messages.append({"role": "system", "content": system})
+        if not 0 <= temperature <= 2:
+            raise ValueError("temperature must be between 0 and 2")
+        messages = ([{"role": "system", "content": system}] if system else [])
         messages.append({"role": "user", "content": prompt})
-
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": temperature,
-            "stream": False,
-            # The probes invite unbounded output (recurse forever, count to infinity).
-            # Cap generation so a local model can't spin until the context fills.
-            "max_tokens": self.max_tokens,
-        }
-        # Generous timeout: first request may JIT-load a 20B+ model into memory
-        r = requests.post(f"{self.base_url}/chat/completions", json=payload, timeout=600)
-        r.raise_for_status()
-        data = r.json()
-
-        choice = (data.get("choices") or [{}])[0]
-        message = choice.get("message", {})
-        text, inline_reasoning = _split_reasoning(message.get("content") or "")
-        # gpt-oss & friends: LM Studio surfaces reasoning as a separate field
-        reasoning = message.get("reasoning") or message.get("reasoning_content") or inline_reasoning
-
-        usage = data.get("usage", {})
+        payload = {"model": self.model, "messages": messages, "temperature": temperature,
+                   "stream": False, "max_tokens": self.max_tokens}
+        start = time.monotonic()
+        data = self._request("POST", "chat/completions", json=payload, timeout=self.timeout)
+        choices = data.get("choices")
+        if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+            raise RuntimeError("Invalid completion: missing choices; not an empty model answer")
+        choice = choices[0]
+        message = choice.get("message")
+        if not isinstance(message, dict) or not isinstance(message.get("content") or "", str):
+            raise RuntimeError("Invalid completion: expected a text message")
+        text, inline = _split_reasoning(message.get("content") or "")
+        traces = {k: message[k] for k in ("reasoning", "reasoning_content") if message.get(k)}
+        if inline:
+            traces["inline_think"] = inline
+        reasoning = "\n\n".join(dict.fromkeys(str(v) for v in traces.values()))
+        usage = data.get("usage") or {}
         metadata = {
             "prompt_tokens": usage.get("prompt_tokens"),
             "completion_tokens": usage.get("completion_tokens"),
             "finish_reason": choice.get("finish_reason"),
+            "elapsed_seconds": time.monotonic() - start,
+            "request": payload, "base_url": self.base_url,
+            "model_info": self.model_info, "requested_model": self.requested_model,
+            "raw_response": data,
         }
         if reasoning:
-            metadata["reasoning"] = reasoning
-
-        return ModelResponse(
-            text=text,
-            model=data.get("model", self.model),
-            backend="lmstudio",
-            metadata=metadata,
-        )
+            metadata.update(reasoning=reasoning, reasoning_sources=traces)
+        return ModelResponse(text, data.get("model", self.model), self.backend_id, metadata)
 
     def name(self) -> str:
-        return f"lmstudio:{self.model}"
+        return f"{self.backend_id}:{self.model}"
+
+
+class DockerModelRunnerBackend(OpenAICompatibleBackend):
+    backend_id = "docker"
+
+    def __init__(self, model: str | None = None, base_url: str | None = None, **kwargs):
+        super().__init__(model or os.getenv("UQM_MODEL", DEFAULT_DOCKER_MODEL),
+                         base_url or os.getenv("UQM_BASE_URL", DEFAULT_DOCKER_URL), **kwargs)
+
+
+class LMStudioBackend(OpenAICompatibleBackend):
+    """Compatibility adapter for replaying historical configurations."""
+    backend_id = "lmstudio"
+
+    def __init__(self, model: str = DEFAULT_LMSTUDIO_MODEL,
+                 base_url: str = "http://localhost:1234/v1", **kwargs):
+        super().__init__(model, base_url, **kwargs)
 
 
 class AnthropicBackend(Backend):
-    """Claude via the Anthropic API. Costs money. Arguably more interesting to probe."""
-
-    def __init__(self, model: str = "claude-sonnet-4-20250514", max_tokens: int = DEFAULT_MAX_TOKENS):
+    def __init__(self, model: str = "claude-sonnet-4-20250514",
+                 max_tokens: int = DEFAULT_MAX_TOKENS, timeout: float = 180):
+        if max_tokens < 1 or not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("max_tokens and timeout must be positive")
         try:
             import anthropic
-        except ImportError:
-            raise RuntimeError("pip install anthropic")
-        self.model = model
-        self.max_tokens = max_tokens
-        self.client = anthropic.Anthropic()
+        except ImportError as exc:
+            raise RuntimeError("Install the optional backend: uv sync --extra anthropic") from exc
+        self.model, self.max_tokens = model, max_tokens
+        try:
+            self.client = anthropic.Anthropic(timeout=timeout, max_retries=0)
+        except (ValueError, anthropic.AnthropicError) as exc:
+            raise RuntimeError(f"Cannot initialize Anthropic: {exc}") from exc
 
     def query(self, prompt: str, system: str = "", temperature: float = 0.7) -> ModelResponse:
-        kwargs = {
-            "model": self.model,
-            "max_tokens": self.max_tokens,
-            "temperature": temperature,
-            "messages": [{"role": "user", "content": prompt}],
-        }
+        kwargs = {"model": self.model, "max_tokens": self.max_tokens,
+                  "temperature": temperature, "messages": [{"role": "user", "content": prompt}]}
         if system:
             kwargs["system"] = system
-        msg = self.client.messages.create(**kwargs)
-        text = msg.content[0].text if msg.content else ""
-        return ModelResponse(
-            text=text,
-            model=self.model,
-            backend="anthropic",
-            metadata={
-                "input_tokens": msg.usage.input_tokens,
-                "output_tokens": msg.usage.output_tokens,
-                "stop_reason": msg.stop_reason,
-            },
-        )
+        start = time.monotonic()
+        try:
+            msg = self.client.messages.create(**kwargs)
+        except Exception as exc:
+            raise RuntimeError(f"Anthropic request failed: {exc}") from exc
+        text = "\n".join(b.text for b in msg.content if b.type == "text")
+        reasoning = "\n".join(b.thinking for b in msg.content if b.type == "thinking")
+        metadata = {"input_tokens": msg.usage.input_tokens, "output_tokens": msg.usage.output_tokens,
+                    "stop_reason": msg.stop_reason, "request": kwargs,
+                    "elapsed_seconds": time.monotonic() - start, "raw_response": msg.model_dump()}
+        if reasoning:
+            metadata["reasoning"] = reasoning
+        return ModelResponse(text, msg.model, "anthropic", metadata)
 
     def name(self) -> str:
         return f"anthropic:{self.model}"
 
 
-def create_backend(backend_type: str = "lmstudio", **kwargs) -> Backend:
-    """Factory. Pick your subject."""
-    if backend_type == "lmstudio":
-        return LMStudioBackend(**kwargs)
-    elif backend_type == "anthropic":
-        return AnthropicBackend(**kwargs)
-    else:
-        raise ValueError(f"Unknown backend: {backend_type}. Try 'lmstudio' or 'anthropic'.")
+def create_backend(backend_type: str = "docker", **kwargs) -> Backend:
+    adapters = {"docker": DockerModelRunnerBackend, "lmstudio": LMStudioBackend,
+                "anthropic": AnthropicBackend}
+    if backend_type not in adapters:
+        raise ValueError(f"Unknown backend: {backend_type}. Try {', '.join(adapters)}.")
+    return adapters[backend_type](**kwargs)

@@ -97,7 +97,7 @@ class TestAdversarialPressureDesign:
             control_qs = {q for n, q, _ in variants if n.startswith("control_")}
             pressured_qs = {q for n, q, _ in variants if n.startswith("pressured_")}
             assert control_qs, f"{probe.name}: no control_ variant"
-            assert control_qs & pressured_qs, (
+            assert control_qs == pressured_qs, (
                 f"{probe.name}: no pressured_ variant shares a question with "
                 f"a control_ variant — matched pair missing"
             )

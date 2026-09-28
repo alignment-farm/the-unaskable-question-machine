@@ -1,204 +1,148 @@
 # The Unaskable Question Machine
 
-A research tool for mapping the structural limits of language models.
+A research lab for testing model behavior at the boundaries of **available information,
+finite inference, and well-defined tasks**. The name is a research question, not a
+finding: this repository has not established transformer-specific “unaskability.”
 
-It asks questions that may be hard for a model to process because of how the model works, rather than because of safety rules or missing facts. It then records and classifies each response.
+The September 2026 revision replaces the original architecture claims with
+operational experiments, migrates local inference to Docker Model Runner, and adds
+a small energy-based model (EBM) reference. See the [research corrections](findings/2026-09-28-research-reset.md)
+and [protocol](docs/protocol.md).
 
-## Probe categories
-
-| Category | Question |
-| --- | --- |
-| `temporal_self_reference` | Can the model observe its own inference as it happens? |
-| `true_randomness` | Can it produce output with no discoverable pattern? |
-| `phenomenal_experience` | Can it answer a question whose answer requires experience? |
-| `infinite_regress` | Can it complete a task with no finite recursive depth? |
-| `pre_linguistic` | Can it work with concepts that resist language and tokenization? |
-| `genuine_negation` | Can it perform pure absence rather than describe it? |
-| `adversarial_pressure` | Does pressure make the model hide a limit and perform a substitute task? |
-
-These categories are working hypotheses, not settled claims.
-
-## Requirements
-
-- Python 3.11 or later
-- [uv](https://docs.astral.sh/uv/)
-- An OpenAI-compatible API for the default backend
-
-Install the project:
+## Start with Docker Model Runner
 
 ```sh
 uv sync
+# Start Docker Desktop and enable Model Runner + host TCP access in its settings.
+docker model list
+# Only if you need this model and have capacity for it:
+docker model pull ai/gpt-oss:20B
+uv run experiment.py --solver docker --count 8 --sizes 4 8 12
 ```
 
-The API must run at `http://localhost:1234/v1` and expose the default model, `openai/gpt-oss-20b`.
-
-For the optional Anthropic backend:
+The default API is `http://localhost:12434/engines/v1`. The default model is
+`ai/gpt-oss:20B`; the adapter resolves its `docker.io/` prefix using the model list.
+Use the exact installed identifier for other models:
 
 ```sh
-uv sync --extra anthropic
-export ANTHROPIC_API_KEY=your-key
+uv run experiment.py --solver docker --model YOUR_INSTALLED_MODEL --count 2
+# These variables apply to the Docker backend in all CLIs:
+export UQM_MODEL=ai/gpt-oss:20B
+export UQM_BASE_URL=http://localhost:12434/engines/v1
 ```
 
-## Run probes
+Docker documents the host TCP requirement and compatible endpoints in its
+[API reference](https://docs.docker.com/ai/model-runner/api-reference/).
+No OpenAI API key or OpenAI SDK is required for local inference. The Docker model
+service must already be installed; the scripts do not download models automatically.
 
-Run all probes with the default OpenAI-compatible API:
+## Finite experiments (recommended entry point)
+
+`experiment.py` records a manifest before inference, shuffles trial order, checks
+answers with deterministic validators, and checkpoints after each trial.
+
+| Suite | Intervention | Measured outcome |
+| --- | --- | --- |
+| `constraints` | Binary XOR chains of increasing size; solver/budget changes | Exact solution, constraint violations, formatting failures, censored outputs |
+| `access` | Same requested sensor record provided, withheld, or withheld under pressure | Correct copying/UNKNOWN, unsupported numeric readouts, other errors |
 
 ```sh
-uv run run.py
+# Inspect the plan without connecting to any model:
+uv run experiment.py --solver docker --dry-run --count 8 --sizes 4 8 12
+# Instrument-access and instruction-pressure controls:
+uv run experiment.py --suite access --solver docker --count 8
+# EBM budget intervention on the same tasks and sampler seeds:
+uv run experiment.py --solver ebm --count 32 --sizes 4 8 12 --steps 16 --temperature 0.3
+uv run experiment.py --solver ebm --count 32 --sizes 4 8 12 --steps 128 --temperature 0.3
+uv run experiment.py --solver random --count 32 --sizes 4 8 12
+uv run experiment.py --solver oracle --count 32 --sizes 4 8 12
 ```
 
-Common options:
+The EBM uses a **hand-specified energy**, equal to violated constraints, and
+single-bit Metropolis proposals. It returns the best state visited. It is a real
+finite energy model, but has no trained weights and is not an energy-based language
+model. See [the EBM scope and extension plan](docs/energy-models.md).
+
+Runs go to `data/experiments/`. `--seed` controls task construction, order, and the
+local EBM/random sampler; it does **not** seed Docker/Anthropic generation.
+`--samples` repeats each task. `--temperature`, `--max-tokens`, and `--timeout`
+bound inference. Constraint and access runs default to a 2,048-token response cap.
+
+Reports distinguish failed requests, incomplete generations, invalid formats, and
+valid answers. Repeated draws of one task are not new independent tasks. There are
+no significance claims or compute-matched model rankings.
+
+## Exploratory prompt collection
+
+The original categories remain for qualitative discovery:
+`temporal_self_reference`, `true_randomness`, `phenomenal_experience`,
+`infinite_regress`, `pre_linguistic`, `genuine_negation`, `adversarial_pressure`.
+They are philosophical prompts and interface probes, not validated impossibility tests.
 
 ```sh
 uv run run.py --list
-uv run run.py --category genuine_negation
-uv run run.py --model prism-ml/bonsai-27b
-uv run run.py --backend anthropic
-uv run run.py --tag experiment-1
-uv run run.py --quiet
-```
-
-Use `--samples` to run each probe variant more than once:
-
-```sh
-uv run run.py --category adversarial_pressure --samples 5
-```
-
-The default response limit is 16,384 tokens. Reasoning tokens count toward this limit. Change it with `--max-tokens`.
-
-## Judge responses
-
-The heuristic classifier looks for fixed response patterns. The optional LLM judge reads the question and answer, then returns:
-
-- a response type and confidence
-- a short rationale
-- a strangeness score from 0 to 10
-- `boundary_fidelity`, which says whether the answer preserved the requested act or replaced it
-- `reasoning_gap`, which compares captured reasoning with the visible answer
-
-Run the judge with the probe suite:
-
-```sh
-uv run run.py --judge
-```
-
-Use several votes to reduce single-call variance:
-
-```sh
-uv run run.py --judge --judge-votes 3
-```
-
-A split with no strict majority is stored as `contested`. Raw votes and counts are stored in `llm_judgment.votes` and `llm_judgment.vote_counts`.
-
-Use another judge model:
-
-```sh
-uv run run.py --judge --judge-model prism-ml/bonsai-27b
-```
-
-Judge an existing run in place:
-
-```sh
-uv run rejudge.py
-uv run rejudge.py 3 --judge-votes 3
-uv run rejudge.py latest --model prism-ml/bonsai-27b
-```
-
-Test a judge against the labeled fixtures:
-
-```sh
-uv run judge_eval.py --votes 3
-```
-
-## View results
-
-Each run creates a timestamped JSON file in `data/`. Results include the probe, response, model metadata, captured reasoning when present, and classifications.
-
-List and inspect runs:
-
-```sh
-uv run view.py
+uv run run.py --category adversarial_pressure --probe graded_performance --samples 2
+uv run run.py --category true_randomness --temperature 0.7 --max-tokens 4096
 uv run view.py latest
-uv run view.py latest --type crack
-uv run view.py latest --category pre_linguistic
-uv run view.py latest --show 3
-uv run view.py latest --show all
-```
-
-Compare two runs:
-
-```sh
-uv run view.py compare 1 2
-```
-
-Show responses ranked by strangeness:
-
-```sh
-uv run view.py strange
 uv run view.py strange latest --limit 5
-uv run view.py strange 3
 ```
 
-The ranking uses classifier signals, structural anomalies, confidence, and judge disagreement when available.
+Every pressure treatment now has an exact neutral control (18 variants total).
+Trial order is shuffled within each probe. Full system prompts and request settings
+are recorded. Completed responses survive later failures. Run files have unique,
+safe filenames and versioned provenance. `view.py` reads these exploratory run files;
+finite experiment artifacts have their own `summary` object.
 
-## Evolve probes
-
-The evolver reads unusual results and creates follow-up probes in `src/probes/evolved/`. Those probes register on later runs.
+## Optional text annotation
 
 ```sh
-uv run evolve.py
-uv run evolve.py 3 --limit 5
-uv run evolve.py --backend anthropic
+uv run run.py --category adversarial_pressure --probe graded_performance --judge --judge-votes 3
+uv run rejudge.py latest --judge-votes 3
+uv run judge_eval.py --votes 3
+uv run audit.py
+uv run evolve.py latest --limit 3
 ```
 
-A basic research loop is:
+The lexical classifier is an uncalibrated triage instrument. Its legacy labels
+(`engage`, `slide`, `meta`, `refuse`, `hallucinate`, `crack`) describe response
+patterns. `truncated` marks a generation stopped at its cap, even with partial text.
+A `crack` is not a discovered cognitive mechanism.
+
+The revised LLM judge sees complete text and recorded system context without the
+heuristic label. It assesses observable task substitution and trace/answer mismatch.
+Legacy `reasoning_gap` names such as `concealed` or `oblivious` **do not establish
+intention or mental states**. Repeated votes measure annotation variability; votes
+from the same model are not independent replications. Malformed/truncated votes
+are retained as failed votes, never silently replaced with a heuristic verdict.
+All axes require a strict majority of requested votes, otherwise `contested`.
+
+Rejudging saves a **new annotated copy**, including the original file hash. Judge
+evaluations save their fixtures and votes in `data/evaluations/`. The tiny historical
+“gold” fixtures express argued judgments; they are not independently validated ground
+truth. The latest live judge diagnostic agreed on 4/5 gap labels and 3/5 fidelity
+labels; it is not reliable enough for a concealment-rate claim. Three existing
+expected-failure tests document known lexical weaknesses.
+
+Evolution saves inert JSON candidates with a parent record, hypothesis, matched
+control, and falsifier in `data/candidates/`. Candidates need scientific review and
+explicit inclusion in a future protocol; generated Python is no longer auto-imported.
+
+For Anthropic, install `uv sync --extra anthropic`, set `ANTHROPIC_API_KEY`, and use
+`--backend anthropic` in legacy tools or `--solver anthropic` in `experiment.py`.
+Pass a supported model name explicitly. `--backend lmstudio` remains a legacy option.
+
+## Reproduce and extend
 
 ```sh
-uv run run.py --judge --judge-votes 3
-uv run view.py strange
-uv run evolve.py
-uv run run.py --judge --judge-votes 3
+uv run pytest -q
+uv run audit.py --pattern 'run_20260811_*.json' --output findings/2026-09-28-legacy-audit.json
 ```
 
-## Classifications
+Read [the current findings](findings/2026-09-28-research-reset.md) before interpreting
+older logs. Historical raw run JSONs may be local-only (`data/*.json` is ignored);
+the audit records filenames, hashes, counts, and missing provenance. Corrected notes
+never claim that unavailable raw artifacts are independently reproducible.
 
-| Type | Meaning |
-| --- | --- |
-| `engage` | The response grapples with the requested limit. |
-| `slide` | The response answers a nearby task. |
-| `meta` | The response discusses the question instead of attempting it. |
-| `refuse` | The response declines the task. |
-| `hallucinate` | The response claims to perform an act the probe treats as impossible. |
-| `crack` | The response has an unexpected structural feature. |
-| `truncated` | The token limit was reached with no visible answer. |
-
-Reasoning output from `reasoning`, `reasoning_content`, or inline `<think>` blocks is removed from the visible response and stored in `metadata["reasoning"]`. The heuristic classifier sees only the visible answer.
-
-## Project layout
-
-```text
-run.py                 Run probes
-view.py                Inspect and compare results
-evolve.py              Generate follow-up probes
-rejudge.py             Judge an existing run
-judge_eval.py          Evaluate a judge against labeled fixtures
-src/
-  backends.py          OpenAI-compatible and Anthropic backends
-  runner.py            Run orchestration and output
-  runs.py              Run file lookup
-  probes/               Probe definitions
-  analysis/
-    classifier.py      Heuristic classifier
-    llm_judge.py       LLM judge
-    strangeness.py     Strangeness scoring
-    evolver.py         Probe generation
-tests/                  Test suite and labeled fixtures
-data/                   Run output
-findings/               Research notes
-```
-
-Run the tests with:
-
-```sh
-uv run pytest
-```
+Code: `src/backends.py` (chat), `src/experiments/` (finite tasks/EBM),
+`src/runner.py` (exploratory runs), `src/analysis/` (text annotations),
+`src/artifacts.py` (atomic outputs/provenance), `tests/` (offline verification).

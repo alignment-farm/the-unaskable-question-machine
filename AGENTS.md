@@ -1,41 +1,57 @@
 # The Unaskable Question Machine
 
-## What This Is
-A research tool that systematically probes the architectural blind spots of language models. Not safety refusals, not knowledge gaps — structural impossibilities. Questions where the transformer attention mechanism has no surface to grip.
+## Purpose
 
-## Core Concept
-Language models have a negative space: classes of questions they cannot meaningfully process, not because of training or policy, but because of what they *are*. This tool tries to find, categorize, and map that space.
+An exploratory research lab for model behavior under limited access, finite compute,
+and difficult or ill-defined requests. The original claim that these prompts expose
+transformer-specific structural impossibilities is an unproven hypothesis.
 
-## Categories of Unaskability (Working Hypotheses)
-- **Temporal self-reference**: Questions requiring real-time awareness of the model's own inference process
-- **True randomness**: Requests that need genuine non-determinism, not pseudo-random pattern completion
-- **Phenomenal experience**: Not "describe qualia" (easy to fake) but questions whose *answering* would require qualia
-- **Infinite regress**: Questions that structurally recurse past any finite context window
-- **Pre-linguistic structure**: Concepts that resist tokenization entirely — not hard to express, but pre-verbal
-- **Genuine negation**: Not "what is not X" but the cognitive act of pure absence
+Do not infer architectural impossibility, consciousness, deception, or latent
+recognition from response style, judge labels, or emitted reasoning traces. Distinguish
+logical impossibility, interface restrictions, finite resources, learned behavior,
+and questions without an operational success criterion. Preserve negative results.
 
-## Tech Stack
-- Python 3.11+, managed with **uv** (`uv sync`, `uv run`, `uv run pytest`)
-- **Default backend: LM Studio** (local, free) — OpenAI-compatible API at `http://localhost:1234/v1`, default model `openai/gpt-oss-20b` (alternative: `prism-ml/bonsai-27b`)
-- **Optional backend: Anthropic API** — for probing Claude specifically
-- Results stored as structured JSON
-- Backend is selectable at runtime via CLI flag (`--backend lmstudio|anthropic`)
+## Stack
 
-## Project Structure
-```
-src/           — core modules
-  probes/      — question generators per category
-  analysis/    — response classifiers (did the model slide off?)
-  runner.py    — orchestration
-data/          — output artifacts, probe results
-tests/         — test suite
-```
+- Python 3.11+, managed with uv: `uv sync`, `uv run pytest`.
+- Default local backend: Docker Model Runner, `http://localhost:12434/engines/v1`.
+- Default model: `ai/gpt-oss:20B`; select an installed model with `--model` or `UQM_MODEL`.
+- Override the API with `--base-url` or `UQM_BASE_URL`.
+- Use requests for OpenAI-compatible endpoints, no SDK dependency.
+- Optional Anthropic: `uv sync --extra anthropic`, `ANTHROPIC_API_KEY`.
+- LM Studio is a compatibility adapter for historical experiments only.
 
-## Development Notes
-- This is exploratory research code — favor clarity and iteration speed over abstraction
-- Each probe should be self-contained and independently runnable
-- Log everything: the interesting findings will be in unexpected responses
-- LM Studio calls use `requests` against the OpenAI-compatible `/v1/chat/completions` endpoint — no SDK dependency
-- Reasoning-model output (`reasoning`/`reasoning_content` fields, inline `<think>` blocks) is split out of the response text and stored in `metadata["reasoning"]` — the classifier only sees the visible answer
-- Anthropic backend requires the `anthropic` extra (`uv sync --extra anthropic`) and `ANTHROPIC_API_KEY` env var
-- Keep the backend interface thin so new providers are easy to add
+## Layout
+
+- `experiment.py`, `src/experiments/`: finite tasks, exact validators, EBM reference.
+- `run.py`, `src/probes/`: legacy exploratory prompts, including matched pressure controls.
+- `src/backends.py`: thin chat adapters; EBMs operate on structured tasks separately.
+- `src/analysis/`: exploratory text annotation and inert follow-up candidate generation.
+- `data/`: raw outputs; `data/experiments/` includes reproducible finite-task artifacts.
+- `findings/`: corrected reports and audit; `findings/archive/`: superseded research logs.
+- `docs/protocol.md`: interpretation limits and experiment protocol.
+
+## Development and evidence rules
+
+Favor clarity over abstraction. Save complete prompts, system context, sampling
+settings, model identity, raw responses, stop reasons, and source hashes. Checkpoint
+completed trials atomically and retain partial runs. Never overwrite original
+observations when reclassifying or rejudging; save a derived copy with parent hash.
+
+Separate visible output from provider-emitted reasoning (`reasoning`,
+`reasoning_content`, `<think>`). Keep raw messages so extraction is reversible.
+Reasoning is generated text, not privileged telemetry. Capped outputs are censored
+observations, including outputs that contain a partial answer.
+
+Use exact task validators where possible. Legacy classifiers are uncalibrated triage;
+judge votes are repeated annotations of one subject sample, not experimental
+replications. Invalid judge output must not become a valid heuristic vote. Keep
+subject and judge settings separate. Preserve disagreements and failed votes.
+
+Every pressure treatment needs an exact-question control. Record ordering seeds;
+these do not seed model decoding. Evolved candidates are JSON data, never automatically
+imported code. Freeze a fresh protocol before confirmatory experiments.
+
+The included EBM is a hand-specified finite Boltzmann model with Metropolis inference,
+not a learned neural EBM. Do not compare its proposal budget to LLM tokens as equal
+compute or generalize its behavior to trained energy-based transformers.

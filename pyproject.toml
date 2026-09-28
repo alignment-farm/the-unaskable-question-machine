@@ -1,7 +1,7 @@
 [project]
 name = "unaskable-question-machine"
-version = "0.1.0"
-description = "Systematically probes the architectural blind spots of language models"
+version = "0.2.0"
+description = "Controlled experiments on model behavior, interface access, and finite inference limits"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

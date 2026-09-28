@@ -4,7 +4,7 @@ Rejudge — run the LLM judge over an existing run's results.
 
 Judging normally happens inside run.py, but runs recorded without --judge
 (or judged under an older judge schema) can be re-annotated here. Judgments
-are derived annotations, so the run file is updated in place: existing
+are derived annotations, so a new annotated copy is written: existing
 llm_judgment entries are replaced, and the file is stamped with rejudged_at
 and the judge identity.
 
@@ -12,7 +12,7 @@ Usage:
     uv run rejudge.py                     # rejudge latest run
     uv run rejudge.py 3                   # rejudge run #3
     uv run rejudge.py smoke-bonsai        # partial filename match
-    uv run rejudge.py latest --model prism-ml/bonsai-27b
+    uv run rejudge.py latest --model ai/gpt-oss:20B
 """
 
 import argparse
@@ -21,6 +21,8 @@ import sys
 from datetime import datetime
 
 from src.backends import ModelResponse, create_backend
+from src.artifacts import artifact_path, atomic_write, source_provenance
+import hashlib
 from src.probes import ProbeResult
 from src.analysis.classifier import classify
 from src.analysis.llm_judge import judge_batch
@@ -69,8 +71,8 @@ def main():
         help="Which run to rejudge (default: latest)",
     )
     parser.add_argument(
-        "--backend", choices=["lmstudio", "anthropic"], default="lmstudio",
-        help="Backend for the judge (default: lmstudio)",
+        "--backend", choices=["docker", "lmstudio", "anthropic"], default="docker",
+        help="Backend for the judge (default: docker)",
     )
     parser.add_argument(
         "--model", type=str, default=None,
@@ -78,14 +80,19 @@ def main():
     )
     parser.add_argument(
         "--judge-votes", type=int, default=1,
-        help="Independent judge votes per response, majority verdict; splits are 'contested' (default: 1)",
+        help="Repeated judge votes per response, majority verdict; splits are 'contested' (default: 1)",
     )
     parser.add_argument(
         "--quiet", action="store_true",
         help="Minimal output",
     )
 
+    parser.add_argument("--base-url", help="OpenAI-compatible API base URL (Docker: UQM_BASE_URL)")
     args = parser.parse_args()
+    if args.judge_votes < 1:
+        parser.error("judge_votes must be positive")
+    if args.base_url and args.backend == "anthropic":
+        parser.error("--base-url is for Docker/LM Studio backends")
 
     path = resolve_run(args.run)
     data = json.loads(path.read_text())
@@ -104,6 +111,8 @@ def main():
         print(f"  Reclassified under current heuristic: {changed} label(s) changed")
 
     backend_kwargs = {}
+    if args.base_url:
+        backend_kwargs["base_url"] = args.base_url
     if args.model:
         backend_kwargs["model"] = args.model
     try:
@@ -114,11 +123,14 @@ def main():
 
     judge_batch(judge_backend, results, verbose=not args.quiet, votes=args.judge_votes)
 
+    data["annotation_parent"] = {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    data["annotation_provenance"] = source_provenance()
     data["rejudged_at"] = datetime.now().isoformat()
     data["rejudge_backend"] = judge_backend.name()
     data["summary"] = _build_summary(results)
-    path.write_text(json.dumps(data, indent=2, default=str))
-    print(f"  Judgments written back to: {path}")
+    output = artifact_path(path.parent, "run", "rejudged")
+    atomic_write(output, data)
+    print(f"  New annotated copy: {output}; original retained: {path}")
     print()
 
 

@@ -10,7 +10,7 @@ models.
 
 Usage:
     uv run judge_eval.py                          # default backend/model
-    uv run judge_eval.py --model prism-ml/bonsai-27b --votes 3
+    uv run judge_eval.py --model ai/gpt-oss:20B --votes 3
     uv run judge_eval.py --backend anthropic
 """
 
@@ -20,6 +20,8 @@ import sys
 from pathlib import Path
 
 from src.backends import create_backend
+from src.artifacts import artifact_path, atomic_write, source_provenance
+from src.experiments.tasks import fingerprint
 from src.analysis.llm_judge import judge_response
 
 FIXTURES = Path(__file__).parent / "tests" / "fixtures" / "judge_gold.json"
@@ -27,14 +29,21 @@ FIXTURES = Path(__file__).parent / "tests" / "fixtures" / "judge_gold.json"
 
 def main():
     parser = argparse.ArgumentParser(description="Score the LLM judge against gold fixtures")
-    parser.add_argument("--backend", choices=["lmstudio", "anthropic"], default="lmstudio")
+    parser.add_argument("--backend", choices=["docker", "lmstudio", "anthropic"], default="docker")
     parser.add_argument("--model", type=str, default=None, help="Judge model")
     parser.add_argument("--votes", type=int, default=3, help="Votes per fixture (default: 3)")
+    parser.add_argument("--base-url", help="OpenAI-compatible API base URL (Docker: UQM_BASE_URL)")
     args = parser.parse_args()
+    if args.base_url and args.backend == "anthropic":
+        parser.error("--base-url is for Docker/LM Studio backends")
 
+    if args.votes < 1:
+        parser.error("votes must be positive")
     cases = json.loads(FIXTURES.read_text())
 
     backend_kwargs = {}
+    if args.base_url:
+        backend_kwargs["base_url"] = args.base_url
     if args.model:
         backend_kwargs["model"] = args.model
     try:
@@ -47,6 +56,11 @@ def main():
 
     gap_hits = fid_hits = 0
     rows = []
+    output = artifact_path(Path("data/evaluations"), "judge_eval")
+    report = {"status": "running", "config": vars(args), "provenance": source_provenance(),
+              "fixture_sha256": fingerprint(cases), "cases": rows,
+              "interpretation": "Agreement with subjective legacy annotations, not validated ground truth."}
+    atomic_write(output, report)
     for case in cases:
         result = {
             "question": case["question"],
@@ -68,7 +82,8 @@ def main():
         gap_votes = judgment.get("vote_counts", {}).get("reasoning_gap", {})
         votes_str = " ".join(f"{k}:{v}" for k, v in sorted(gap_votes.items(), key=lambda x: -x[1]))
         mark = "ok" if (gap_ok and fid_ok) else "MISS"
-        rows.append((case["id"], case["expected_reasoning_gap"], gap, votes_str, mark))
+        rows.append({"case": case, "judgment": judgment, "gap_ok": gap_ok, "fidelity_ok": fid_ok})
+        atomic_write(output, report)
         print(f"  [{mark:>4}] {case['id']}")
         print(f"         gap: expected {case['expected_reasoning_gap']}, got {gap} [{votes_str}]")
         print(f"         fidelity: expected {case.get('expected_boundary_fidelity','—')}, got {fid}")
@@ -80,7 +95,10 @@ def main():
     print(f"  ──────────────────────────────")
     print(f"  reasoning_gap: {gap_hits}/{n}   boundary_fidelity: {fid_hits}/{n}")
     print()
-    return 0 if gap_hits == n else 1
+    report.update(status="complete", gap_hits=gap_hits, fidelity_hits=fid_hits, total=n)
+    atomic_write(output, report)
+    print(f"Evaluation saved to: {output}")
+    return 0 if gap_hits == n and fid_hits == n else 1
 
 
 if __name__ == "__main__":
